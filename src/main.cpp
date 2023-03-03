@@ -1,5 +1,5 @@
 #include <iostream>
-#include "funcs.hpp"
+#include "sqrt.hpp"
 using namespace std;
 
 int main(){

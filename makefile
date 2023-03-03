@@ -1,19 +1,19 @@
 all: build
 
-build: src/main.o src/funcs.o
-	g++ src/main.o src/funcs.o -o build.out
+build: src/main.o src/sqrt.o
+	g++ src/main.o src/sqrt.o -o build.out
 
 main.o: main.cpp
 	g++ -c src/main.cpp
 
-funcs.o: funcs.cpp
-	g++ -c src/funcs.cpp
+sqrt.o: sqrt.cpp
+	g++ -c src/sqrt.cpp
 
-funcs_tests.o: tests/funcs_tests.cpp
-	g++ -c tests/funcs_tests.cpp
+sqrt_tests.o: tests/sqrt_tests.cpp
+	g++ -c tests/sqrt_tests.cpp
 
-tests: tests/funcs_tests.o #src/funcs.o
-	g++ tests/funcs_tests.o -o tests.out
+tests: tests/sqrt_tests.o
+	g++ tests/sqrt_tests.o -o sqrt_tests.out
 
 clean:
 	rm -rf **/*.o
