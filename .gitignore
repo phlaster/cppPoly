@@ -1,8 +1,8 @@
 # Compiled Object files
-*.o
+**/*.o
 
 # Compiled Dynamic libraries
-*.so
+**/*.so
 
 # Executables
-*.out
+**/*.out
