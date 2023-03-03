@@ -19,11 +19,11 @@ double average(double a, double b){
 }
 
 double improve(double guess, double x){
-	return average(guess,x/guess );
+	return average(guess, x/guess);
 }
 
 bool goodGuess(double guess, double x, double eps=1e-9){
-	return abs( sqr(guess) - x ) < (eps * min(x, guess));
+	return abs( sqr(guess) - x ) < eps;
 }
 
 double sqrtIter(double guess, double x, double eps=1e-9){
