@@ -16,19 +16,29 @@ solve.o: solve.cpp
 print.o: print.cpp
 	g++ -c scr/print.cpp
 
-# # # # #
+
+##################################################
+#------------------- TESTS ----------------------#
+##################################################
 sqrt_tests.o: tests/sqrt_tests.cpp
 	g++ -c tests/sqrt_tests.cpp
 
 solve_tests.o: tests/solve_tests.cpp
 	g++ -c tests/solve_tests.cpp
 
-tests1: tests/sqrt_tests.o
-	g++ src/sqrt.o src/solve.o tests/sqrt_tests.o -o sqrt_tests.out
+testfuncs.o: tests/testfuncs.cpp
+	g++ -c tests/testfuncs.cpp
+	
+tests1: src/sqrt.o src/solve.o tests/sqrt_tests.o tests/testfuncs.o
+	g++ src/sqrt.o src/solve.o tests/sqrt_tests.o tests/testfuncs.o -o sqrt_tests.out
 
-tests2: tests/solve_tests.o
-	g++ src/sqrt.o src/solve.o tests/solve_tests.o -o solve_tests.out
-# # # # #
+tests2: src/sqrt.o src/solve.o tests/solve_tests.o tests/testfuncs.o
+	g++ src/sqrt.o src/solve.o tests/solve_tests.o tests/testfuncs.o -o solve_tests.out
+
+
+##################################################
+#------------------ UTILITY ---------------------#
+##################################################
 clean:
 	rm -rf **/*.o
 
