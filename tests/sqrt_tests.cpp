@@ -1,6 +1,6 @@
 #include <assert.h>
 #include <iostream>
-#include "../src/sqrt.cpp"
+#include "../src/headers/sqrt.hpp"
 
 bool isapprox(double a, double b, double tolerance=1e-9){
     return abs(a-b) <= tolerance;
@@ -30,6 +30,6 @@ int main() {
     assert(isapprox(sqrt(9), 3));
     assert(!isapprox(sqrt(9), 3+1e-7));
         
-    std::cout << "All tests passed!" << std::endl;    
+    std::cout << "sqrt: All tests passed!" << std::endl;    
     return 0;
 }
