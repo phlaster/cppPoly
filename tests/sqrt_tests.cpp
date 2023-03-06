@@ -1,10 +1,8 @@
 #include <assert.h>
 #include <iostream>
 #include "../src/headers/sqrt.hpp"
+#include "testfuncs.hpp"
 
-bool isapprox(double a, double b, double tolerance=1e-9){
-    return abs(a-b) <= tolerance;
-}
 
 int main() {
     assert(abs(3) == 3);
