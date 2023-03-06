@@ -1,5 +1,6 @@
 #include <vector>
 
+
 #ifndef SOLVE_HPP
 #define SOLVE_HPP
 std::vector<double> solve(double a, double b, double c);
