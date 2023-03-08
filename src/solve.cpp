@@ -1,77 +1,85 @@
 #include <vector>
 #include "headers/sqrt.hpp"
+#include "headers/roots.hpp"
 
 
-void swap(std::vector<double>& v, int i1, int i2) {
-    double temp = v[i1];
-    v[i1] = v[i2];
-    v[i2] = temp;
+void swap(std::vector<double>& v, int i, int j)
+{
+    v[i] = v[i] + v[j];
+    v[j] = v[i] - v[j];
+    v[i] = v[i] - v[j];
 }
 
 
-double discr(double a, double b, double c){
-    return sqr(b) -4.0 * a * c;
+double discr(double a, double b, double c)
+{
+    return sqr(b) - 4.0 * a * c;
 }
 
 
-int coefCheck(double a, double b, double c){
-    if (a == 0) return 0;
+RootsType coefCheck(double a, double b, double c, double eps=1e-9)
+{
+    if (abs(a) < eps)
+        return WRONG_COEFICIENTS;
     double d = discr(a,b,c);
-    if (d == 0) return 2;
-    if (d > 0) return 1;
-    if (d < 0) return -1;
-    return 0;
+    if (abs(d) < eps)
+        return SINGLE_REAL;
+    if (d > eps)
+        return PAIR_OF_REAL;
+    if (d < -eps)
+        return CONJUGATED_COMPLEX;
+    return ROOT_ERROR;
 }
 
 
-std::vector<double> realRoots(double a, double b, double c){
+std::vector<double> realRoots(double a, double b, double c)
+{
     double d = discr(a, b, c);
     double sqrtd = sqrt(d);
     
-    std::vector<double> roots {
+    std::vector<double> roots
+    {
         (-b - sqrtd)/(2.0 * a),
-        (-b + sqrtd)/(2.0 * a)
+        c != 0 ? (-b + sqrtd)/(2.0 * a) : 0.0
     };
     if (roots[0] > roots[1]) swap(roots, 0,1);
     return roots;
 }
 
 
-std::vector<double> pairRoots(double a, double b){
+std::vector<double> pairRoots(double a, double b)
+{
     std::vector<double> roots(2.0 , -b/(2.0 * a));
     return roots;
 }
 
 
-std::vector<double> complexRoots(double a, double b, double c){
+std::vector<double> complexRoots(double a, double b, double c)
+{
     double d = discr(a, b, c);
     
-    std::vector<double> roots {
-            -b/(2.0 * a),
-            sqrt(abs(d))/(2.0 * a)
-        };
+    std::vector<double> roots
+    {
+        -b/(2.0 * a),
+        sqrt(abs(d))/(2.0 * a)
+    };
         return roots;
 }
 
 
-std::vector<double> solve(double a, double b, double c){
-    std::vector<double> ans(2);
-    int check = coefCheck(a,b,c);
-    switch (check) {
-        case 1:
-            ans = realRoots(a, b, c);
-            ans.push_back(1);
-            break;
-        case -1:
-            ans = complexRoots(a,b,c);
-            ans.push_back(-1);
-            break;
-        case 2:
-            ans = pairRoots(a,b);
-            ans.push_back(2);
-            break;
+Roots solve(double a, double b, double c)
+{
+    switch (coefCheck(a,b,c))
+    {
+        case PAIR_OF_REAL:
+            return Roots({PAIR_OF_REAL,  realRoots(a, b, c)});
+        case CONJUGATED_COMPLEX:
+            return Roots({CONJUGATED_COMPLEX, complexRoots(a,b,c)});
+        case SINGLE_REAL:
+            return Roots({SINGLE_REAL, pairRoots(a,b)});
+        case WRONG_COEFICIENTS:
+            return Roots({.rootsType=WRONG_COEFICIENTS});
         default:
-            ans.push_back(0);
+            return Roots({.rootsType=ROOT_ERROR});
     }
-    return ans;
 }

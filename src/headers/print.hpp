@@ -1,8 +1,9 @@
 #include <vector>
+#include "roots.hpp"
 
 #ifndef PRINT_HPP
 #define PRINT_HPP
-void print(std::vector<double> roots);
+void print(Roots roots);
 #endif
 
 #ifndef INPUT_HPP

@@ -4,7 +4,8 @@
 #include "testfuncs.hpp"
 
 
-int main() {
+int main()
+{
     assert(abs(3) == 3);
     assert(abs(-2.4) == 2.4);
 

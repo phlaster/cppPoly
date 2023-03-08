@@ -1,9 +1,9 @@
 #include <vector>
-
+#include "roots.hpp"
 
 #ifndef SOLVE_HPP
 #define SOLVE_HPP
-std::vector<double> solve(double a, double b, double c);
+Roots solve(double a, double b, double c);
 #endif
 
 #ifndef SWAP_HPP
@@ -19,7 +19,7 @@ double discr(double a, double b, double c);
 
 #ifndef COEFCHECK_HPP
 #define COEFCHECK_HPP
-int coefCheck(double a, double b, double c);
+int coefCheck(double a, double b, double c, double eps=1e-7);
 #endif
 
 #ifndef REALROOTS_HPP
