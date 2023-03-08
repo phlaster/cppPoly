@@ -10,7 +10,7 @@ void swap(std::vector<double>& v, int i1, int i2) {
 
 
 double discr(double a, double b, double c){
-    return sqr(b) -4*a*c;
+    return sqr(b) -4.0 * a * c;
 }
 
 
@@ -29,8 +29,8 @@ std::vector<double> realRoots(double a, double b, double c){
     double sqrtd = sqrt(d);
     
     std::vector<double> roots {
-        (-b - sqrtd)/(2*a),
-        (-b + sqrtd)/(2*a)
+        (-b - sqrtd)/(2.0 * a),
+        (-b + sqrtd)/(2.0 * a)
     };
     if (roots[0] > roots[1]) swap(roots, 0,1);
     return roots;
@@ -38,7 +38,7 @@ std::vector<double> realRoots(double a, double b, double c){
 
 
 std::vector<double> pairRoots(double a, double b){
-    std::vector<double> roots(2, -b/(2*a));
+    std::vector<double> roots(2.0 , -b/(2.0 * a));
     return roots;
 }
 
@@ -47,8 +47,8 @@ std::vector<double> complexRoots(double a, double b, double c){
     double d = discr(a, b, c);
     
     std::vector<double> roots {
-            -b/(2*a),
-            sqrt(abs(d))/(2*a)
+            -b/(2.0 * a),
+            sqrt(abs(d))/(2.0 * a)
         };
         return roots;
 }
