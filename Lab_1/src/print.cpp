@@ -3,15 +3,18 @@
 #include "headers/roots.hpp"
 using namespace std;
 
-void input(double * a, double * b, double * c){
+void input(double * a, double * b, double * c)
+{
     cout << "Enter coefficients" << endl;
     cin >> *a >> *b >> *c;
     cout << "Your quadratic is:\n" <<\
-    *a << "x²+" << *b << "x+" << *c << "=0" <<endl;
+    *a << "x²+" << *b << "x+" << *c << "=0" <<endl; // sry for unicode
 }
 
-void print(Roots roots){
-    switch (roots.rootsType){
+void print(Roots roots)
+{
+    switch (roots.rootsType)
+    {
         case PAIR_OF_REAL:
             cout <<"Your quadratic has 2 real roots:\n"\
             <<roots.roots[0]<<", "<<roots.roots[1]<<endl;
