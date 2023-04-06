@@ -20,9 +20,16 @@ Then to run it in interactive mode type:
 ```
 To feed in file with coefficients firstly create the file:
 ```bash
-echo '4 5 9' > inputfile
+echo '4,5,9' > inputfile
+echo '-2,4,0.6' >> inputfile
+# as many lines as you need
+# or you can use given 'examples.txt'
 ```
 Then type:
 ```bash
-cat inputfile | ./build.out | tail -n 1 > outputfile
+./build.out -f inputfile -o outputfile
+```
+For help type:
+```bash
+./build.out --help
 ```
