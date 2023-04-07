@@ -5,6 +5,7 @@ To compile the program type:
 ```bash
 make -f makefile
 ```
+* note: you need to satisfy all the dependencies from `requirements.txt`
 ## Testing
 ```bash
 make tests1
