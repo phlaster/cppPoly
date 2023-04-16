@@ -34,7 +34,8 @@ class Square : public Shape
 int main() {
     int length = 10;
     vector<Square> theZoo;
-    for (int i = 0; i<length; i++){
+    for (int i = 0; i<length; i++)
+    {
         Square sqr;
         sqr.name = "Good Name";
         sqr.dims.push_back((i+1)*1.4);
@@ -42,9 +43,10 @@ int main() {
         theZoo.push_back(sqr);
     }
 
-    for (int i = 0; i<length; i++){
-        cout << theZoo[i].name << "\n";
-        cout << theZoo[i].dims[0] << " x "<< theZoo[i].dims[1] << "\n";
+    for (int i = 0; i<length; i++)
+    {
+        cout << theZoo[i].name << endl;
+        cout << theZoo[i].dims[0] << " x "<< theZoo[i].dims[1] << endl;
     }
     
   return 0;
