@@ -1,8 +1,10 @@
-# Compiled Object files
-**/*.o
+**/*.zip
+**/*.7z
+**/*.rar
 
-# Compiled Dynamic libraries
-**/*.so
-
-# Executables
 **/*.out
+**/*.o
+**/*.exe
+
+**/*.csv
+**/*.dat
