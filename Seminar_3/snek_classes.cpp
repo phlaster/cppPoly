@@ -20,11 +20,13 @@ public:
     }
 
     void Run() {
+        int dirMod;
         while (!gameOver) {
             Draw();
             Input();
             Logic();
-            usleep(150000 - score*4000); // Game speed increases
+            dirMod = (dir == RIGHT || dir == LEFT) ? 3 : 4;
+            usleep(dirMod*(100000 - score*2000)); // Game speed increases
         }
     }
 
@@ -144,8 +146,13 @@ private:
         }
 
         // check for collision with the walls
-        if (x < 0 || x >= width || y < 0 || y >= height)
-            gameOver = true;
+        // if (x < 0 || x >= width || y < 0 || y >= height)
+        //     gameOver = true;
+
+        if (x >= width) x = 0;
+            else if (x < 0) x = width;
+                else if (y >= height) y = 0;
+                    else if (y < 0) y = height;
 
         // check for collision with the tail
         for (int i = 0; i < nTail; i++) {
