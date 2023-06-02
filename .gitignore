@@ -8,3 +8,7 @@
 
 **/*.csv
 **/*.dat
+
+.vscode/
+**/.vscode/
+**/Build/
