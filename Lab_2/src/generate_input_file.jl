@@ -25,9 +25,9 @@ function main()
             for i = 1:N
                 a = (rand ∘ rand)([-9:-1, 1:9])
                 b, c = rand(-9:9, 2)
-                answer = (string ∘ solve ∘ Eq)(a,b,c)
+                answer = (string ∘ solve ∘ Eq)(a,b,c)[5:end-1]
                 println(task, "$a $b $c")
-                println(res, string(answer[5:end-1]))
+                println(res, answer)
             end
         end
     end
