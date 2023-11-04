@@ -1,7 +1,7 @@
 CC=clang++
 CFLAGS_DBG=-g3 -O0 -Wall -Wextra --std=c++17
 CFLAGS=-O3 --std=c++17
-SOURCE_DIR=./src
+SOURCE_DIR=.
 OBJECT_DIR=objects
 DBG_NAME=debug
 BIN_NAME=build
