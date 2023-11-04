@@ -62,7 +62,7 @@ EQ_Manager::generateEq() {
     int b = -a*(x1+x2);
     int c = a*x1*x2;
 
-    std::vector<int> eq({a,b,c,x1,x2});
+    std::vector<int> eq({a,b,c});
     return eq;
 }
 
