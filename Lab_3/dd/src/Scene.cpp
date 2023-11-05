@@ -1,10 +1,11 @@
 #include "headers/Scene.hpp"
 #include "headers/BombGem.hpp"
 #include "headers/CrossGem.hpp"
-
+#include <SFML/Audio.hpp>
 #include <utility>
 #include <cstdlib>
 #include <cmath>
+#include <iostream>
 
 bool isThird(GemTable const& gems, size_t i, size_t j, SpriteEnum color) {
     return
@@ -27,10 +28,10 @@ Scene::Scene(size_t x0, size_t y0, size_t width, size_t height)
         this->mainBoard.at(i).resize(width);
         for (size_t j = 0; j < width; j++) {
             sf::Vector2f pos(calculPosition(i, j));
-            SpriteEnum color = static_cast<SpriteEnum>(rand() % 4);
+            SpriteEnum color = SpriteEnum(rand() % 4);
 
             while (isThird(mainBoard, i, j, color))
-                color = static_cast<SpriteEnum>(rand() % 4);
+                color = SpriteEnum(rand() % 4);
 
             this->mainBoard.at(i).at(j) = new Gem(pos.x, pos.y, color);
         }
@@ -64,10 +65,11 @@ void Scene::onHover(sf::Event event, size_t ti, size_t tj, size_t& hi, size_t& h
 }
 
 bool isNeighbor(size_t ti, size_t tj, size_t hi, size_t hj) {
-    return (std::abs(static_cast<int>(ti - hi)) == 1 &&
-        std::abs(static_cast<int>(tj - hj)) == 0) ||
-        (std::abs(static_cast<int>(ti - hi)) == 0 &&
-            std::abs(static_cast<int>(tj - hj)) == 1);
+    return (
+        std::abs(int(ti - hi)) == 1 &&
+        std::abs(int(tj - hj)) == 0) ||
+        (std::abs(int(ti - hi)) == 0 &&
+        std::abs(int(tj - hj)) == 1);
 }
 
 void swapGems(GemTable& gems, size_t i1, size_t j1, size_t i2, size_t j2) {
@@ -87,6 +89,10 @@ bool Scene::pressedEvent(bool& isTaken, size_t& ti, size_t& tj, size_t hi, size_
     else if (isNeighbor(ti, tj, hi, hj)) {
         swapGems(mainBoard, ti, tj, hi, hj);
         isSwapped = true;
+        
+        sf::Music music;
+        music.openFromFile("assets/thud.wav");
+        music.play();
     }
 
     isTaken = !isTaken;
@@ -135,7 +141,7 @@ int Scene::collisionGems(int gi, int gj) {
     else if (gemsCount >= 5) {
         sf::Vector2f pos(calculPosition(gi, gj));
         delete mainBoard.at(gi).at(gj);
-        mainBoard.at(gi).at(gj) = new CrossGem(pos.x, pos.y, static_cast<SpriteEnum>(rand() % 4), color);
+        mainBoard.at(gi).at(gj) = new CrossGem(pos.x, pos.y, SpriteEnum(rand() % 4), color);
     }
 
     return score;
@@ -143,7 +149,7 @@ int Scene::collisionGems(int gi, int gj) {
 
 void updateGems(GemTable& gems, size_t width, size_t height) {
     int find;
-    for (int i = static_cast<int>(height - 1); i >= 0; i--) {
+    for (int i =height-1; i >= 0; i--) {
         for (int j = 0; j < width; j++) {
             if (gems.at(i).at(j)->getSprite() == SpriteEnum::SpriteEmpty) {
                 find = i - 1;
@@ -151,10 +157,11 @@ void updateGems(GemTable& gems, size_t width, size_t height) {
                 while (find >= 0 && gems.at(find).at(j)->getSprite() == SpriteEnum::SpriteEmpty)
                     --find;
 
-                if (find >= 0)
+                if (find >= 0){
                     swapGems(gems, i, j, find, j);
+                }
                 else
-                    gems.at(i).at(j)->setSprite(static_cast<SpriteEnum>(rand() % 4));
+                    gems.at(i).at(j)->setSprite(SpriteEnum(rand() % 4));
             }
         }
     }
@@ -182,8 +189,8 @@ void Scene::update(sf::Event event, int& score) {
     }
 
     if (isSwapped) {
-        dscore += collisionGems(static_cast<int>(hover_i), static_cast<int>(hover_j));
-        dscore += collisionGems(static_cast<int>(taken_i), static_cast<int>(taken_j));
+        dscore += collisionGems(int(hover_i), int(hover_j));
+        dscore += collisionGems(int(taken_i), int(taken_j));
 
         if (dscore == 0)
             swapGems(mainBoard, taken_i, taken_j, hover_i, hover_j);
@@ -202,10 +209,11 @@ void Scene::update(sf::Event event, int& score) {
             for (size_t j = 0; j < width; j++) {
                 SpriteEnum color = mainBoard.at(i).at(j)->getSprite();
                 if (color != SpriteEnum::SpriteEmpty && isThird(mainBoard, i, j, color)) {
-                    score += collisionGems(static_cast<int>(i), static_cast<int>(j));
+                    score += collisionGems(i, j);
                     isUpdated = false;
                 }
             }
         }
+        sf::sleep(sf::seconds(0.05));
     }
 }
