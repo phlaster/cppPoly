@@ -6,7 +6,7 @@ OBJECT_DIR=objects
 DBG_NAME=debug
 BIN_NAME=build
 
-SOURCES=main TaskManagers
+SOURCES=main TaskManagers Student EduGroup Teacher funcs
 
 DBG_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix _DBG.o,$(SOURCES)))
 OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(SOURCES)))

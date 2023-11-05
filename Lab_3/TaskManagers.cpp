@@ -15,7 +15,7 @@ EQ_Manager::generate(int n, const std::string& filename) {
 }
 
 std::pair<std::string, bool>
-EQ_Manager::check(const std::string& filename) {
+EQ_Manager::check(const std::string& filename) const {
     std::string line;
     std::vector<int> coeffs;
     std::vector<double> givenRoots;
@@ -80,7 +80,7 @@ EQ_Manager::equationWithSolution() {
 bool
 EQ_Manager::isCorrectSolution(
     const std::vector<int>&coeffs, const std::vector<double>& givenRoots
-    ){
+    ) const{
     if (coeffs.size() != 3) {
         std::cerr << "Неверное количество коэффициентов в файле с решением!" << std::endl;
         exit(1);
@@ -89,8 +89,17 @@ EQ_Manager::isCorrectSolution(
         std::cerr << "Решение должно состоять из двух корней, даже если они кратные!" << std::endl;
         exit(1);
     }
-    bool good_x1 = std::fabs(coeffs[0] * givenRoots[0] * givenRoots[0] + coeffs[1] * givenRoots[0] + coeffs[2]) <= 1e-16;
-    bool good_x2 = std::fabs(coeffs[0] * givenRoots[1] * givenRoots[1] + coeffs[1] * givenRoots[1] + coeffs[2]) <= 1e-16;
+    double _x1 =  givenRoots[0], _x2 = givenRoots[1],
+        a = coeffs[0], b = coeffs[1], c = coeffs[2];
+    double D = b*b - 4*a*c;
 
-    return good_x1 && good_x2;
+    if (D<0){
+        return fabs(_x1) + fabs(_x2) < 1e-16;
+    } else {
+        double x1 = (-b+std::sqrt(D))/2/a;
+        double x2 = (-b-std::sqrt(D))/2/a;
+
+        return std::abs(std::max(x1,x2)-std::max(_x1,_x2)) < 1e-16 &&
+            std::abs(std::min(x1,x2)-std::min(_x1,_x2)) < 1e-16;
+    }
 }
