@@ -1,6 +1,8 @@
 #include "headers/Game.hpp"
+#include <SFML/Audio.hpp>
 #include <cstdlib>
 #include <string>
+#include <iostream>
 
 static size_t BOARD_X0;
 static size_t BOARD_Y0;
@@ -72,7 +74,7 @@ bool Game::setConfiguration(Config const& cfg) {
 void setMessage(sf::Text& message, int score) {
     std::string msg("Points: ");
     msg += std::to_string(score);
-    msg += "\t\t\t\tGoal: ";
+    msg += "\nGoal: ";
     msg += std::to_string(SCORE_GOAL);
     message.setString(msg);
 }
@@ -127,6 +129,14 @@ void Game::loop() {
                 mainBoard = new Scene(BOARD_X0, BOARD_Y0, GEMS_WIDTH_COUNT, GEMS_HEIGHT_COUNT);
                 setMessage(m_message, m_score);
                 isOver = false;
+
+                sf::Music music;
+                if (!music.openFromFile("assets/blem.wav")){
+                    std::cerr << "Couldn't find the sound file!" << std::endl;
+                }
+                else{
+                    music.play();
+                }
             }
 
             if (!isOver)
