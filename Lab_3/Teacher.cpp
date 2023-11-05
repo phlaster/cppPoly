@@ -25,6 +25,7 @@ void Teacher::check(const EQ_Manager& eqm, const EduGroup& group){
 
 
 void Teacher::printScore(const EduGroup& group){
+    std::cout << "Результаты группы " << group.getname() << ":" << std::endl;
     for (auto &[student_name, results] : groupJournals[group.getname()]){
         std::cout << student_name << ": " << results.first<<"/"<<results.second << " ("<<group.students.at(student_name).getgood()<<")" << std::endl;
     }
