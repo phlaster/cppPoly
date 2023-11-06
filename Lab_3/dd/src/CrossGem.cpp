@@ -2,14 +2,14 @@
 #include <cstdlib>
 
 CrossGem::CrossGem(float x, float y, SpriteEnum sprite, SpriteEnum bonus)
-    : Gem(x, y, sprite), m_bonus(bonus)
+    : BonusGem(x, y, sprite), bonusColor(bonus)
 {
     sf::Vector2f size(Gem::ONE_SPRITE_WIDTH, Gem::ONE_SPRITE_WIDTH);
-    this->m_cross.setSize(size);
-    this->m_cross.setOrigin(size / 2.f);
+    this->BonusFrame.setSize(size);
+    this->BonusFrame.setOrigin(size / 2.f);
 
-    this->m_cross.setTexture(&Gem::SPRITE);
-    this->m_cross.setTextureRect(
+    this->BonusFrame.setTexture(&Gem::SPRITE);
+    this->BonusFrame.setTextureRect(
         sf::IntRect(
             int(Gem::ONE_SPRITE_WIDTH * int(bonus)),
             int(Gem::ONE_SPRITE_WIDTH),
@@ -17,19 +17,8 @@ CrossGem::CrossGem(float x, float y, SpriteEnum sprite, SpriteEnum bonus)
         )
     );
 
-    this->m_cross.setPosition(x, y);
+    this->BonusFrame.setPosition(x, y);
 }
-
-void CrossGem::setPosition(sf::Vector2f pos) {
-    Gem::setPosition(pos);
-    this->m_cross.setPosition(pos);
-}
-
-void CrossGem::draw(sf::RenderWindow* window) const {
-    Gem::draw(window);
-    window->draw(this->m_cross);
-}
-
 
 int CrossGem::activate(GemTable& gems, size_t i, size_t j, size_t width, size_t height) {
     int dx[8] = { -1, 1, -1, 1, -2, 2, -2,  2};
@@ -45,7 +34,7 @@ int CrossGem::activate(GemTable& gems, size_t i, size_t j, size_t width, size_t 
             xj >= 0 &&
             xj < int(width) &&
             gems.at(xi).at(xj)->getSprite() != SpriteEnum::SpriteEmpty) {
-            gems.at(xi).at(xj)->setSprite(m_bonus);
+            gems.at(xi).at(xj)->setSprite(bonusColor);
         }
     }
     sf::Vector2f pos = this->getPosition();

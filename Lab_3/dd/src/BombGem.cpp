@@ -3,14 +3,14 @@
 #include <cstdlib>
 
 BombGem::BombGem(float x, float y, SpriteEnum sprite)
-    : Gem(x, y, sprite)
+    : BonusGem(x, y, sprite)
 {
     sf::Vector2f size(Gem::ONE_SPRITE_WIDTH, Gem::ONE_SPRITE_WIDTH);
-    this->m_bomb.setSize(size);
-    this->m_bomb.setOrigin(size / 2.f);
+    this->BonusFrame.setSize(size);
+    this->BonusFrame.setOrigin(size / 2.f);
 
-    this->m_bomb.setTexture(&Gem::SPRITE);
-    this->m_bomb.setTextureRect(
+    this->BonusFrame.setTexture(&Gem::SPRITE);
+    this->BonusFrame.setTextureRect(
         sf::IntRect(
             int(Gem::ONE_SPRITE_WIDTH * int(BonusEnum::BonusBomb)), 
             int(Gem::ONE_SPRITE_WIDTH),
@@ -18,17 +18,7 @@ BombGem::BombGem(float x, float y, SpriteEnum sprite)
         )
     );
 
-    this->m_bomb.setPosition(x, y);
-}
-
-void BombGem::setPosition(sf::Vector2f pos) {
-    Gem::setPosition(pos);
-    this->m_bomb.setPosition(pos);
-}
-
-void BombGem::draw(sf::RenderWindow* window) const {
-    Gem::draw(window);
-    window->draw(this->m_bomb);
+    this->BonusFrame.setPosition(x, y);
 }
 
 int BombGem::activate(GemTable& gems, size_t i, size_t j, size_t width, size_t height) {
