@@ -32,8 +32,12 @@ void Gem::setSprite(SpriteEnum sprite) {
 }
 
 int Gem::activate(GemTable& gems, size_t i, size_t j, size_t width, size_t height) {
-    gems.at(i).at(j)->setSprite(SpriteEnum::SpriteEmpty);
-    return int(ScoreEnum::RewardGem);
+    if (i<height && j<width){
+        gems.at(i).at(j)->setSprite(SpriteEnum::SpriteEmpty);
+        return int(ScoreEnum::RewardGem);
+    } else {
+        return 0;
+    }
 }
 
 void Gem::hover(bool isHover) {
