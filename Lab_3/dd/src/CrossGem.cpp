@@ -32,7 +32,7 @@ void CrossGem::draw(sf::RenderWindow* window) const {
 
 
 int CrossGem::activate(GemTable& gems, size_t i, size_t j, size_t width, size_t height) {
-    int dx[8] = { -1, 1, -1, 1, -2, 2, -2, 2};
+    int dx[8] = { -1, 1, -1, 1, -2, 2, -2,  2};
     int dy[8] = { -1, -1, 1, 1, -2, 2,  2, -2};
 
     for (int k = 0; k < 8; k++) {

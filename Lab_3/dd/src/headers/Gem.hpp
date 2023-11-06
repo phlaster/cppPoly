@@ -9,8 +9,8 @@ using GemTable = std::vector<std::vector<Gem*>>;
 
 enum class ScoreEnum {
     RewardGem = 1,
-    RewardX = 5,
-    RewardBomb = 10
+    RewardX = 2,
+    RewardBomb = 7
 };
 
 enum class SpriteEnum {

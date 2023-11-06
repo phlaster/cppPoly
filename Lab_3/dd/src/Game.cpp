@@ -9,12 +9,12 @@ static size_t BOARD_Y0;
 static size_t GEMS_WIDTH_COUNT;
 static size_t GEMS_HEIGHT_COUNT;
 
-static unsigned int WINDOW_WIDTH;
-static unsigned int WINDOW_HEIGHT;
+static size_t WINDOW_WIDTH;
+static size_t WINDOW_HEIGHT;
 static sf::Color CLEAR_COLOR;
 
 static sf::Font FONT;
-static unsigned int CHARTER_SIZE;
+static size_t CHARTER_SIZE;
 static float M_POSITION_X ;
 static float M_POSITION_Y;
 static sf::Color M_COLOR;
@@ -39,7 +39,7 @@ bool Game::setConfiguration(Config const& cfg) {
     if (!FONT.loadFromFile(cfg.FONT_FILE))
         return false;
 
-    srand(static_cast<unsigned int>(time(NULL)));
+    srand(uint(time(NULL)));
     
     Gem::ONE_SPRITE_WIDTH = cfg.ONE_SPRITE_WIDTH;
     Gem::GEM_SIZE = cfg.GEM_SIZE;
@@ -52,18 +52,18 @@ bool Game::setConfiguration(Config const& cfg) {
     WINDOW_WIDTH = cfg.WINDOW_WIDTH;
     WINDOW_HEIGHT = cfg.WINDOW_HEIGHT;
 
-    r = static_cast<sf::Uint8>((cfg.CLEAR_COLOR_RGB & 0x00ff0000) >> 16);
-    g = static_cast<sf::Uint8>((cfg.CLEAR_COLOR_RGB & 0x0000ff00) >> 8);
-    b = static_cast<sf::Uint8>(cfg.CLEAR_COLOR_RGB & 0x000000ff);
+    r = sf::Uint8((cfg.CLEAR_COLOR_RGB & 0x00ff0000) >> 16);
+    g = sf::Uint8((cfg.CLEAR_COLOR_RGB & 0x0000ff00) >> 8);
+    b = sf::Uint8(cfg.CLEAR_COLOR_RGB & 0x000000ff);
     CLEAR_COLOR = sf::Color(r, g, b);
 
     CHARTER_SIZE = cfg.CHARTER_SIZE;
     M_POSITION_X = cfg.M_POSITION_X;
     M_POSITION_Y = cfg.M_POSITION_Y;
 
-    r = static_cast<sf::Uint8>((cfg.M_COLOR_RGB & 0x00ff0000) >> 16);
-    g = static_cast<sf::Uint8>((cfg.M_COLOR_RGB & 0x0000ff00) >> 8);
-    b = static_cast<sf::Uint8>(cfg.M_COLOR_RGB & 0x000000ff);
+    r = sf::Uint8((cfg.M_COLOR_RGB & 0x00ff0000) >> 16);
+    g = sf::Uint8((cfg.M_COLOR_RGB & 0x0000ff00) >> 8);
+    b = sf::Uint8(cfg.M_COLOR_RGB & 0x000000ff);
     M_COLOR = sf::Color(r, g, b);
 
     SCORE_GOAL = cfg.SCORE_GOAL;
@@ -152,7 +152,6 @@ void Game::loop() {
                 isOver = true;
                 m_message.setString("GAME OVER! Press SPACE to play again.");
             }
-
 
             m_window->draw(m_message);
             mainBoard->draw(m_window);

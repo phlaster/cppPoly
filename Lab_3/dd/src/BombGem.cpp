@@ -11,9 +11,9 @@ BombGem::BombGem(float x, float y, SpriteEnum sprite)
     this->m_bomb.setTexture(&Gem::SPRITE);
     this->m_bomb.setTextureRect(
         sf::IntRect(
-            static_cast<int>(Gem::ONE_SPRITE_WIDTH * static_cast<int>(BonusEnum::BonusBomb)), 
-            static_cast<int>(Gem::ONE_SPRITE_WIDTH),
-            static_cast<int>(Gem::ONE_SPRITE_WIDTH), static_cast<int>(Gem::ONE_SPRITE_WIDTH)
+            int(Gem::ONE_SPRITE_WIDTH * int(BonusEnum::BonusBomb)), 
+            int(Gem::ONE_SPRITE_WIDTH),
+            int(Gem::ONE_SPRITE_WIDTH), int(Gem::ONE_SPRITE_WIDTH)
         )
     );
 
@@ -54,5 +54,5 @@ int BombGem::activate(GemTable& gems, size_t i, size_t j, size_t width, size_t h
         score += gems.at(ni).at(nj)->activate(gems, ni, nj - 1, width, height);
 
     delete tmp;
-    return static_cast<int>(ScoreEnum::RewardBomb) + score;
+    return int(ScoreEnum::RewardBomb) + score;
 }

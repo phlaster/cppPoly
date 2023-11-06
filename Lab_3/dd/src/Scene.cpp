@@ -7,6 +7,7 @@
 #include <cmath>
 #include <iostream>
 
+// Стоят ли рядом два таких же по цвету
 bool isThird(GemTable const& gems, size_t i, size_t j, SpriteEnum color) {
     return
         (i >= 2) && (gems.at(i - 1).at(j)->getSprite() == color &&
@@ -15,11 +16,13 @@ bool isThird(GemTable const& gems, size_t i, size_t j, SpriteEnum color) {
             gems.at(i).at(j - 2)->getSprite() == color);
 }
 
+// Экранная координата гема в (i,j) 
 sf::Vector2f Scene::calculPosition(size_t i, size_t j) {
     return sf::Vector2f(x0 + Gem::GEM_SIZE / 2.0f + j * Gem::GEM_SIZE,
         y0 + Gem::GEM_SIZE / 2.0f + i * Gem::GEM_SIZE);
 }
 
+// Конструктор сцены
 Scene::Scene(size_t x0, size_t y0, size_t width, size_t height)
     : x0(x0), y0(y0), width(width), height(height)
 {
@@ -38,18 +41,21 @@ Scene::Scene(size_t x0, size_t y0, size_t width, size_t height)
     }
 }
 
+// Деструктор сцены
 Scene::~Scene() {
     for (auto& line : this->mainBoard)
         for (auto& gem : line)
             delete gem;
 }
 
+// Рисует всю сцену в окне
 void Scene::draw(sf::RenderWindow* window) {
     for (auto const& line : this->mainBoard)
         for (auto const& gem : line)
-                gem->draw(window);
+            gem->draw(window);
 }
 
+// Обработчик движений мыши
 void Scene::onHover(sf::Event event, size_t ti, size_t tj, size_t& hi, size_t& hj, bool isTaken) {
     size_t i = (event.mouseMove.y - y0) / Gem::GEM_SIZE;
     size_t j = (event.mouseMove.x - x0) / Gem::GEM_SIZE;
@@ -64,6 +70,7 @@ void Scene::onHover(sf::Event event, size_t ti, size_t tj, size_t& hi, size_t& h
     }
 }
 
+// Проверка гемов на соседство
 bool isNeighbor(size_t ti, size_t tj, size_t hi, size_t hj) {
     return (
         std::abs(int(ti - hi)) == 1 &&
@@ -72,6 +79,7 @@ bool isNeighbor(size_t ti, size_t tj, size_t hi, size_t hj) {
         std::abs(int(tj - hj)) == 1);
 }
 
+// Свап гемов и их спрайтов
 void swapGems(GemTable& gems, size_t i1, size_t j1, size_t i2, size_t j2) {
     sf::Vector2f pos = gems.at(i1).at(j1)->getPosition();
     gems.at(i1).at(j1)->setPosition(gems.at(i2).at(j2)->getPosition());
@@ -79,6 +87,7 @@ void swapGems(GemTable& gems, size_t i1, size_t j1, size_t i2, size_t j2) {
     std::swap(gems.at(i1).at(j1), gems.at(i2).at(j2));
 }
 
+// Обработчик нажатия
 bool Scene::pressedEvent(bool& isTaken, size_t& ti, size_t& tj, size_t hi, size_t hj) {
     bool isSwapped = false;
 
@@ -101,11 +110,16 @@ bool Scene::pressedEvent(bool& isTaken, size_t& ti, size_t& tj, size_t hi, size_
     return isSwapped;
 }
 
+// Обработчик срабатываний событий после свопа, возвращает заработанные в процессе очки 
 int Scene::collisionGems(int gi, int gj) {
     SpriteEnum color = mainBoard.at(gi).at(gj)->getSprite();
-    int gemsCount = 0, lineCount = 0, score = 0;
-    int left = gj - 1, right = gj + 1;
-    int up = gi - 1, down = gi + 1;
+    int gemsCount = 0,
+        lineCount = 0,
+        score = 0,
+        left = gj - 1,
+        right = gj + 1,
+        up = gi - 1,
+        down = gi + 1;
 
     while (left >= 0 && (mainBoard.at(gi).at(left)->getSprite() == color))
         --left;
@@ -138,7 +152,7 @@ int Scene::collisionGems(int gi, int gj) {
         delete mainBoard.at(gi).at(gj);
         mainBoard.at(gi).at(gj) = new BombGem(pos.x, pos.y, color);
     }
-    else if (gemsCount >= 5) {
+    else if (gemsCount >= 4) {
         sf::Vector2f pos(calculPosition(gi, gj));
         delete mainBoard.at(gi).at(gj);
         mainBoard.at(gi).at(gj) = new CrossGem(pos.x, pos.y, SpriteEnum(rand() % 4), color);
@@ -147,6 +161,7 @@ int Scene::collisionGems(int gi, int gj) {
     return score;
 }
 
+// Обновляет все гемы после схлопывания, двигает дырки наверх, заполняет новыми гемами
 void updateGems(GemTable& gems, size_t width, size_t height) {
     int find;
     for (int i =height-1; i >= 0; i--) {
@@ -167,6 +182,7 @@ void updateGems(GemTable& gems, size_t width, size_t height) {
     }
 }
 
+// Обновляет сцену, счётчики после событий IO
 void Scene::update(sf::Event event, int& score) {
     static bool isUpdated = true;
     static bool isTaken = false;
