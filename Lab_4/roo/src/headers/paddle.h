@@ -7,30 +7,29 @@ public:
     static paddle* mainPaddle;
     paddle() :game_object({ 300, 100 }) {
         size = { 80, 10 };
-        change_size_time = -100000;
         mainPaddle = this;
-        to_stick = false;
+        isMagnetic = false;
     }
     void changeSize();
     void drawPaddle();
     void moveLeft();
     void moveRight();
+    void stop();
     virtual void move() {}; 
-    void activateSticking();
+    void magnetize();
     virtual v2 getSize();
     bool isReadyToStick() {
-        return to_stick;
+        return isMagnetic;
     }
-    void notReadyToStick() {
-        to_stick = false;
+    void unMagnit() {
+        isMagnetic = false;
     }
     virtual bool inGame() {
         return true;
     }
 private:
     v2 size;
-    int change_size_time;
-    bool to_stick;
+    bool isMagnetic;
 };
 
 #endif

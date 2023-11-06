@@ -18,7 +18,7 @@ void game::create_field() {
 
 game* CurrentInstance;
 
-extern "C"
+// extern "C"
 
 
 v2 game::touch(game_object* f, game_object* s) {
@@ -36,7 +36,7 @@ void game::initGame(int argc, char** argv) {
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(600, 600);
-	glutCreateWindow(" ");
+	glutCreateWindow("Arcanoid!");
 	initGlutFunctions();
 	glutMainLoop();
 }
@@ -52,81 +52,96 @@ bool win() {
 	return f;
 }
 
-void game::theLogic() {
+void endgame_check(){
 	if (ball::balls.empty() || win()) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		exit(0);
 	}
+}
 
-	game_object::globalClockTick();
-	ball* to_deleteBall = NULL;
-	for (auto u : ball::balls) {
-		u->move();
-		if (to_deleteBall) {
-			delete to_deleteBall;
-			to_deleteBall = NULL;
-		}
-		if (!u->inGame()) {
-			to_deleteBall = u;
-		}
-	}
-	if (to_deleteBall) delete to_deleteBall;
-	bonus* to_deleteBonus = NULL;
-	for (auto u : bonus::bonuses) {
-		u->move();
-		if (to_deleteBonus) {
-			delete to_deleteBonus;
-			to_deleteBonus = NULL;
-		}
-		if (!u->inGame()) {
-			to_deleteBonus = u;
-		}
-	}
-	if (to_deleteBonus) delete to_deleteBonus;
+void update_balls() {
+    ball* to_deleteBall = nullptr;
+    for (auto u : ball::balls) {
+        u->move();
+        if (!u->inGame()) {
+            to_deleteBall = u;
+        }
+    }
+    if (to_deleteBall) {
+        delete to_deleteBall;
+        ball::balls.erase(to_deleteBall);
+    }
+}
 
-	
-	for (auto u : ball::balls) {
-		if (!u->isSticking() && touch(u, paddle::mainPaddle) != empty) {
-			if (paddle::mainPaddle->isReadyToStick()) {
-				paddle::mainPaddle->notReadyToStick();
-				u->stick();
-				u->setSpeed({ 0, 0 });
-				continue;
-			}
-			u->pushOff(paddle::mainPaddle);
-		}
-	}
-	
-	to_deleteBonus = NULL;
-	for (auto u : bonus::bonuses) {
-		if (to_deleteBonus) {
-			delete to_deleteBonus;
-			to_deleteBonus = NULL;
-		}
-		if (touch(u, paddle::mainPaddle) != empty) {
-			u->activate();
-			to_deleteBonus = u;
-		}
-	}
+void update_bonuses() {
+    bonus* to_deleteBonus = nullptr;
+    for (auto u : bonus::bonuses) {
+        u->move();
+        if (!u->inGame()) {
+            to_deleteBonus = u;
+        }
+    }
+    if (to_deleteBonus) {
+        delete to_deleteBonus;
+        bonus::bonuses.erase(to_deleteBonus);
+    }
+}
 
-	block* to_deleteBlock = NULL;
-	
-	for (auto u : ball::balls) {
-		for (auto v : block::blocks) {
-			if (to_deleteBlock) {
-				delete to_deleteBlock;
-				to_deleteBlock = NULL;
-			}
-			if (touch(u, v)!=empty) {
-				v->touch();
-				if (!v->inGame()) {
-					to_deleteBlock = v;
-				}
-				u->pushOff(v);
-			}
-		}
-	}
-	if (to_deleteBlock) delete to_deleteBlock;
+void handle_ball_paddle_collisions() {
+    for (auto u : ball::balls) {
+        if (!u->isSticking() && game::touch(u, paddle::mainPaddle) != empty) {
+            if (paddle::mainPaddle->isReadyToStick()) {
+                paddle::mainPaddle->unMagnit();
+                u->stick();
+                u->setSpeed({ 0, 0 });
+                continue;
+            }
+            u->bounce(paddle::mainPaddle);
+        }
+    }
+}
+
+void handle_bonus_paddle_collisions() {
+    bonus* to_deleteBonus = nullptr;
+    for (auto u : bonus::bonuses) {
+        if (game::touch(u, paddle::mainPaddle) != empty) {
+            u->activate();
+            to_deleteBonus = u;
+        }
+    }
+    if (to_deleteBonus) {
+        delete to_deleteBonus;
+        bonus::bonuses.erase(to_deleteBonus);
+    }
+}
+
+void handle_ball_block_collisions() {
+    block* to_deleteBlock = nullptr;
+    for (auto u : ball::balls) {
+        for (auto v : block::blocks) {
+            if (game::touch(u, v) != empty) {
+                v->touch();
+                if (!v->inGame()) {
+                    to_deleteBlock = v;
+                }
+                u->bounce(v);
+            }
+        }
+    }
+    if (to_deleteBlock) {
+        delete to_deleteBlock;
+        block::blocks.erase(to_deleteBlock);
+    }
+}
+
+void game::theLogic() {
+    endgame_check();
+    game_object::globalClockTick();
+    update_balls();
+    update_bonuses();
+    handle_ball_paddle_collisions();
+    handle_bonus_paddle_collisions();
+    handle_ball_block_collisions();
 }
 
 void renderScene() {
@@ -162,12 +177,11 @@ void processNormalKeys(unsigned char key, int x, int y) {
 	}
 	if (key == 'a' || key == 'A') {
 		paddle::mainPaddle->moveLeft();
-	}
-	if (key == 'd' || key == 'D') {
+	} else if (key == 'd' || key == 'D') {
 		paddle::mainPaddle->moveRight();
 	}
-	
 }
+
 void resize(int w, int h) {
 	glViewport(0, 0, w, h);
 }

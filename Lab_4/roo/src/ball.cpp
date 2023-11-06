@@ -6,13 +6,11 @@
 #include <cmath>
 
 std::set<ball*> ball::balls;
-int ball::speed_changing_time;
 bool ball::shield;
 double ball::normal_speed;
 v2 emp = { -1, -1 };
 
 void ball::initBonuses() {
-    speed_changing_time = INT_MIN;
     shield = false;
 }
 
@@ -40,10 +38,6 @@ void ball::drawBall() {
     }
 }
 
-void ball::changeSpeed() {
-    speed_changing_time = mainTime;
-}
-
 bool ball::inGame() {
     if (pos.y < 0) return false;
     return true;
@@ -58,18 +52,18 @@ void ball::move() {
         return;
     }
 
-    if (pos.y + radius >= windowSize.y) {
-        speed.y *= -1;
+    if (pos.y + radius > windowSize.y) {
+        speed.y = -fabs(speed.y);
     }
     pos.x += speed.x;
     pos.y += speed.y;
 
-    if (pos.x - radius <= 0 || pos.x + radius >= windowSize.x) {
+    if (pos.x - 0.95*radius < 0 || pos.x + 1.05*radius > windowSize.x) {
         speed.x *= -1;
     }
 
-    if (shield && pos.y - radius <= 0) {
-        speed.y *= -1;
+    if (shield && pos.y - radius < 0) {
+        speed.y = fabs(speed.y);
         shield = false;
     }
 }
@@ -86,36 +80,7 @@ void ball::notstick() {
     sticking = false;
 }
 
-// void ball::pushOff(game_object* v) {
-//     v2 t = game::touch(this, v);
-//     double rnd_offset = (game_object::create_random(3) - 1) * 0.01;
-
-//     if (t.x < t.y) {
-//         double alpha = (this->getPos().x - v->getPos().x) * 120 / v->getSize().x;
-//         double sy = normal_speed * cos(alpha) + rnd_offset;
-//         double sx = (-1) * normal_speed * sin(alpha) + rnd_offset;
-//         this->speed = { sx, sy };
-
-//         if (v == paddle::mainPaddle) {
-//             this->speed = { this->speed.x, -this->speed.y };
-//         }
-//     }
-//     else {
-//         double alpha = (this->getPos().y - v->getPos().y) * 120 / v->getSize().y;
-//         double sy = normal_speed * sin(alpha) + rnd_offset;
-//         double sx = (-1) * normal_speed * cos(alpha) + rnd_offset;
-//         this->speed = { sx, sy };
-
-//         if (v == paddle::mainPaddle) {
-//             this->speed = { -this->speed.x, this->speed.y };
-//         }
-//     }
-//     while (game::touch(this, v) != emp) {
-//         this->move();
-//     }
-// }
-
-void ball::pushOff(game_object* v) {
+void ball::bounce(game_object* v) {
     v2 t = game::touch(this, v);
 
     double dx = this->getPos().x - v->getPos().x;
@@ -136,16 +101,4 @@ void ball::pushOff(game_object* v) {
     while (game::touch(this, v) != emp) {
         this->move();
     }
-}
-
-
-
-
-
-
-void add_ball::drawBonus() {
-	drawPoly(3);
-}
-void add_ball::activate() {
-	ball* p = new ball(pos);
 }

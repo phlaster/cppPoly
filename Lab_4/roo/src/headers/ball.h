@@ -3,7 +3,7 @@
 #include "game_object.h"
 #include <set>
 
-class ball :  public game_object {
+class ball : public game_object {
 public:
     static std::set<ball*> balls;
 
@@ -11,7 +11,6 @@ public:
         sticking = true;
         normal_speed = 4;
         shield = true;
-        speed_changing_time = -100000;
         balls.insert(this);
     }
 
@@ -22,7 +21,6 @@ public:
     static void initBonuses();
     static void makeShield();
     static void drawAllBalls();
-    static void changeSpeed();
     static double normal_speed;
 
     virtual bool inGame() override;
@@ -35,12 +33,11 @@ public:
         return sticking;
     }
 
-    void pushOff(game_object* v);
+    void bounce(game_object* v);
 
 private:
 
     void drawBall();
-    static int speed_changing_time;
     static bool shield;
     bool sticking; 
 };

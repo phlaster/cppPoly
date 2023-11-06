@@ -23,7 +23,6 @@ protected:
 	v2 pos, speed;
 	void drawPoly(int n);
 	static int mainTime;
-	// static int delay; 
 	static int radius; 
 
 public:

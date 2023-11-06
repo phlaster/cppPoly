@@ -16,20 +16,11 @@ bool bonus::inGame() {
 	return true;
 }
 
-void change_ball_speed::drawBonus() {
-	drawPoly(4);
+void add_ball::drawBonus() {
+	drawPoly(20);
 }
-void change_ball_speed::activate() {
-	ball::changeSpeed();
-}
-
-
-
-void change_paddle_size::drawBonus() {
-	drawPoly(5);
-}
-void change_paddle_size::activate() {
-	paddle::mainPaddle->changeSize();
+void add_ball::activate() {
+	ball* p = new ball(pos);
 }
 
 
@@ -38,12 +29,12 @@ void make_shield::activate() {
 }
 
 void make_shield::drawBonus() {
-	drawPoly(6);
+	drawPoly(4);
 }
 
 void sticking::drawBonus() {
-	drawPoly(8);
+	drawPoly(3);
 }
 void sticking::activate() {
-	paddle::mainPaddle->activateSticking();
+	paddle::mainPaddle->magnetize();
 }
