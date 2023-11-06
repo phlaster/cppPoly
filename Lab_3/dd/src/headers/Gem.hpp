@@ -33,7 +33,7 @@ enum class BonusEnum {
 class Gem{
 private:
     SpriteEnum m_sprite;
-    sf::RectangleShape m_gem;
+    sf::RectangleShape gemBody;
 
 public:
     static sf::Texture SPRITE;
@@ -41,7 +41,7 @@ public:
     static size_t GEM_SIZE;
 
     Gem(float x, float y, SpriteEnum sprite);
-    
+    virtual ~Gem() {}
     SpriteEnum getSprite() const;
     sf::Vector2f getPosition() const;
 
@@ -50,7 +50,8 @@ public:
 
     virtual void setPosition(sf::Vector2f pos);
     virtual void draw(sf::RenderWindow* window) const;
-    virtual int activate(GemTable& gems, size_t i, size_t j, size_t width, size_t height);
+    virtual int activate(
+        GemTable& gems, size_t i, size_t j, size_t width, size_t height);
 };
 
 #endif

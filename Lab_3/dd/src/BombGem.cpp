@@ -1,4 +1,5 @@
 #include "headers/BombGem.hpp"
+#include <cstddef>
 #include <cstdlib>
 
 BombGem::BombGem(float x, float y, SpriteEnum sprite)
@@ -32,12 +33,12 @@ void BombGem::draw(sf::RenderWindow* window) const {
 
 int BombGem::activate(GemTable& gems, size_t i, size_t j, size_t width, size_t height) {
     Gem* tmp = gems.at(i).at(j);
-    int score = 0;
+    size_t score = 0;
     sf::Vector2f pos = this->getPosition();
     gems.at(i).at(j) = new Gem(pos.x, pos.y, SpriteEnum::SpriteEmpty);
 
-    int ni = rand() % height;
-    int nj = rand() % width;
+    size_t ni = rand() % height;
+    size_t nj = rand() % width;
 
     score += gems.at(ni).at(nj)->activate(gems, ni, nj, width, height);
 

@@ -28,10 +28,10 @@ $(OBJECT_DIR):
 debug:
 
 $(DBG_NAME): $(DBG_OBJECTS)
-	$(CC) $(CFLAGS_DBG) $^ -o $@.out
+	$(CC) $(CFLAGS_DBG) $^ -o $@.out $(LIBFLAGS)
 
 $(OBJECT_DIR)/%_DBG.o: $(SOURCE_DIR)/%.cpp | $(OBJECT_DIR)
-	$(CC) $(CFLAGS_DBG) -c $< -o $@ $(LIBFLAGS)
+	$(CC) $(CFLAGS_DBG) -c $< -o $@
 
 
 clean:

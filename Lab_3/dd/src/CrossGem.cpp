@@ -41,9 +41,9 @@ int CrossGem::activate(GemTable& gems, size_t i, size_t j, size_t width, size_t 
 
         if (
             xi >= 0 &&
-            xi < height &&
+            xi < int(height) &&
             xj >= 0 &&
-            xj < width &&
+            xj < int(width) &&
             gems.at(xi).at(xj)->getSprite() != SpriteEnum::SpriteEmpty) {
             gems.at(xi).at(xj)->setSprite(m_bonus);
         }

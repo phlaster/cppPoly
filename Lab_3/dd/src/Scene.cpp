@@ -2,6 +2,7 @@
 #include "headers/BombGem.hpp"
 #include "headers/CrossGem.hpp"
 #include <SFML/Audio.hpp>
+#include <cstddef>
 #include <utility>
 #include <cstdlib>
 #include <cmath>
@@ -9,12 +10,27 @@
 
 // Стоят ли рядом два таких же по цвету
 bool isThird(GemTable const& gems, size_t i, size_t j, SpriteEnum color) {
-    return
-        (i >= 2) && (gems.at(i - 1).at(j)->getSprite() == color &&
-            gems.at(i - 2).at(j)->getSprite() == color) ||
-        (j >= 2) && (gems.at(i).at(j - 1)->getSprite() == color &&
-            gems.at(i).at(j - 2)->getSprite() == color);
+    bool cond1 = (i >= 2) && (gems.at(i - 1).at(j)->getSprite() == color) && (gems.at(i - 2).at(j)->getSprite() == color);
+    bool cond2 = (j >= 2) && (gems.at(i).at(j - 1)->getSprite() == color) && (gems.at(i).at(j - 2)->getSprite() == color);
+    return cond1 || cond2;
 }
+
+// bool isThird(GemTable const& gems, int i, int j, SpriteEnum color) {
+    
+//     if (i < 2){
+//         return false;
+//     } else {
+//         bool cond1a = (gems.at(i - 1).at(j)->getSprite() == color);
+//         bool cond1b = (gems.at(i - 2).at(j)->getSprite() == color);
+//         bool cond1 = cond1a && cond1b;
+
+//         bool cond2a = (gems.at(i).at(j - 1)->getSprite() == color);
+//         bool cond2b = (gems.at(i).at(j - 2)->getSprite() == color);
+//         bool cond2 = cond2a && cond2b;
+//         return cond1 || cond2;
+//     }
+// }
+
 
 // Экранная координата гема в (i,j) 
 sf::Vector2f Scene::calculPosition(size_t i, size_t j) {
@@ -124,13 +140,13 @@ int Scene::collisionGems(int gi, int gj) {
     while (left >= 0 && (mainBoard.at(gi).at(left)->getSprite() == color))
         --left;
 
-    while (right < width && (mainBoard.at(gi).at(right)->getSprite() == color))
+    while (right < int(width) && (mainBoard.at(gi).at(right)->getSprite() == color))
         ++right;
 
     while (up >= 0 && (mainBoard.at(up).at(gj)->getSprite() == color))
         --up;
 
-    while (down < height && (mainBoard.at(down).at(gj)->getSprite() == color))
+    while (down < int(height) && (mainBoard.at(down).at(gj)->getSprite() == color))
         ++down;
 
     if (right - left > 3) {
@@ -165,7 +181,7 @@ int Scene::collisionGems(int gi, int gj) {
 void updateGems(GemTable& gems, size_t width, size_t height) {
     int find;
     for (int i =height-1; i >= 0; i--) {
-        for (int j = 0; j < width; j++) {
+        for (size_t j = 0; j < width; j++) {
             if (gems.at(i).at(j)->getSprite() == SpriteEnum::SpriteEmpty) {
                 find = i - 1;
 
