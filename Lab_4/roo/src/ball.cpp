@@ -86,34 +86,58 @@ void ball::notstick() {
     sticking = false;
 }
 
+// void ball::pushOff(game_object* v) {
+//     v2 t = game::touch(this, v);
+//     double rnd_offset = (game_object::create_random(3) - 1) * 0.01;
+
+//     if (t.x < t.y) {
+//         double alpha = (this->getPos().x - v->getPos().x) * 120 / v->getSize().x;
+//         double sy = normal_speed * cos(alpha) + rnd_offset;
+//         double sx = (-1) * normal_speed * sin(alpha) + rnd_offset;
+//         this->speed = { sx, sy };
+
+//         if (v == paddle::mainPaddle) {
+//             this->speed = { this->speed.x, -this->speed.y };
+//         }
+//     }
+//     else {
+//         double alpha = (this->getPos().y - v->getPos().y) * 120 / v->getSize().y;
+//         double sy = normal_speed * sin(alpha) + rnd_offset;
+//         double sx = (-1) * normal_speed * cos(alpha) + rnd_offset;
+//         this->speed = { sx, sy };
+
+//         if (v == paddle::mainPaddle) {
+//             this->speed = { -this->speed.x, this->speed.y };
+//         }
+//     }
+//     while (game::touch(this, v) != emp) {
+//         this->move();
+//     }
+// }
+
 void ball::pushOff(game_object* v) {
     v2 t = game::touch(this, v);
-    double rnd_offset = (game_object::create_random(3) - 1) * 0.01;
 
-    if (t.x < t.y) {
-        double alpha = (this->getPos().x - v->getPos().x) * 120 / v->getSize().x;
-        double sy = normal_speed * cos(alpha) + rnd_offset;
-        double sx = (-1) * normal_speed * sin(alpha) + rnd_offset;
-        this->speed = { sx, sy };
+    double dx = this->getPos().x - v->getPos().x;
+    double dy = this->getPos().y - v->getPos().y;
+    double angle = atan2(dy, dx);
 
-        if (v == paddle::mainPaddle) {
-            this->speed = { this->speed.x, -this->speed.y };
-        }
+    double speed = normal_speed + 0.01;
+
+    double sx = speed * cos(angle);
+    double sy = speed * sin(angle);
+
+    if (v == paddle::mainPaddle) {
+        sy = fabs(sy);
     }
-    else {
-        double alpha = (this->getPos().y - v->getPos().y) * 120 / v->getSize().y;
-        double sy = normal_speed * sin(alpha) + rnd_offset;
-        double sx = (-1) * normal_speed * cos(alpha) + rnd_offset;
-        this->speed = { sx, sy };
 
-        if (v == paddle::mainPaddle) {
-            this->speed = { -this->speed.x, this->speed.y };
-        }
-    }
+    this->speed = { sx, sy };
+
     while (game::touch(this, v) != emp) {
         this->move();
     }
 }
+
 
 
 
