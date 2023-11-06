@@ -7,17 +7,17 @@
 
 std::set<ball*> ball::balls;
 int ball::speed_changing_time;
-bool ball::bottom;
+bool ball::shield;
 double ball::normal_speed;
 v2 emp = { -1, -1 };
 
 void ball::initBonuses() {
     speed_changing_time = INT_MIN;
-    bottom = false;
+    shield = false;
 }
 
-void ball::makeBottom() {
-    bottom = true;
+void ball::makeShield() {
+    shield = true;
 }
 
 void ball::drawAllBalls() {
@@ -28,9 +28,8 @@ void ball::drawAllBalls() {
 }
 
 void ball::drawBall() {
-    drawNGon(30);
-
-    if (bottom) {
+    drawPoly(30);
+    if (shield) {
         glBegin(GL_QUADS);
         glColor3f(1.0f, 1.0f, 1.0f);
         glVertex2f(0, 0);
@@ -45,7 +44,7 @@ void ball::changeSpeed() {
     speed_changing_time = mainTime;
 }
 
-bool ball::isAlife() {
+bool ball::inGame() {
     if (pos.y < 0) return false;
     return true;
 }
@@ -62,23 +61,16 @@ void ball::move() {
     if (pos.y + radius >= windowSize.y) {
         speed.y *= -1;
     }
-
-    if (mainTime - speed_changing_time <= delay) {
-        pos.x += speed.x * 2;
-        pos.y += speed.y * 2;
-    }
-    else {
-        pos.x += speed.x;
-        pos.y += speed.y;
-    }
+    pos.x += speed.x;
+    pos.y += speed.y;
 
     if (pos.x - radius <= 0 || pos.x + radius >= windowSize.x) {
         speed.x *= -1;
     }
 
-    if (bottom && pos.y - radius <= 0) {
+    if (shield && pos.y - radius <= 0) {
         speed.y *= -1;
-        bottom = false;
+        shield = false;
     }
 }
 
@@ -121,4 +113,15 @@ void ball::pushOff(game_object* v) {
     while (game::touch(this, v) != emp) {
         this->move();
     }
+}
+
+
+
+
+
+void add_ball::drawBonus() {
+	drawPoly(3);
+}
+void add_ball::activate() {
+	ball* p = new ball(pos);
 }

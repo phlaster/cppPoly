@@ -1,10 +1,7 @@
-#include "headers/block.h"
 #include <GL/freeglut.h>
-#include "headers/add_ball.h"
-#include "headers/change_ball_speed.h"
-#include "headers/change_paddle_size.h"
-#include "headers/sticking.h"
-#include "headers/make_bottom.h"
+
+#include "headers/block.h"
+#include "headers/bonus.h"
 
 std::set <block*> block::blocks;
 v2 block::size;
@@ -13,7 +10,7 @@ void block::setSize(v2 s) {
 	size = s;
 }
 
-bool block::isAlife() {
+bool block::inGame() {
     return (hp > 0);
 }
 
@@ -59,7 +56,7 @@ void block::create_bonus() {
 		p = new change_paddle_size(pos);
 		break;
 	case 3:
-		p = new make_bottom(pos);
+		p = new make_shield(pos);
 		break;
 	case 4:
 		p = new sticking(pos);

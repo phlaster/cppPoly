@@ -3,17 +3,14 @@
 #include "game_object.h"
 #include <set>
 
-class ball :
-    public game_object
-{
+class ball :  public game_object {
 public:
-    
     static std::set<ball*> balls;
 
     ball(v2 p) : game_object(p) {
         sticking = true;
         normal_speed = 4;
-        bottom = true;
+        shield = true;
         speed_changing_time = -100000;
         balls.insert(this);
     }
@@ -23,12 +20,12 @@ public:
     }
 
     static void initBonuses();
-    static void makeBottom();
+    static void makeShield();
     static void drawAllBalls();
     static void changeSpeed();
     static double normal_speed;
 
-    virtual bool isAlife() override;
+    virtual bool inGame() override;
     virtual void move() override;
     virtual v2 getSize() override;
 
@@ -44,7 +41,7 @@ private:
 
     void drawBall();
     static int speed_changing_time;
-    static bool bottom;
+    static bool shield;
     bool sticking; 
 };
 #endif

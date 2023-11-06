@@ -4,7 +4,6 @@
 
 v2 game_object:: windowSize;
 int game_object::mainTime;
-int game_object::delay;
 int game_object::radius;
 
 void game_object::move() {
@@ -16,7 +15,7 @@ int game_object::create_random(int n) {
 	return (rand() + time(NULL)) % n;
 }
 
-void game_object::drawNGon(int n) {
+void game_object::drawPoly(int n) {
 	double pi = 2 * acos(0.0);
 	glBegin(GL_POLYGON); 
 	for (int i = 0; i < n; ++i)

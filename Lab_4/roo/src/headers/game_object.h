@@ -5,8 +5,6 @@
 #include <chrono>
 
 
-// using namespace std::chrono;
-
 typedef struct v2 {
     double x;
     double y;
@@ -19,13 +17,24 @@ typedef struct v2 {
 	}
 } v2;
 
-class game_object
-{
+
+class game_object {
+protected:
+	v2 pos, speed;
+	void drawPoly(int n);
+	static int mainTime;
+	// static int delay; 
+	static int radius; 
+
 public:
 	game_object() : pos({ 0, 0 }), speed({ 0, 0 }) {};
 	game_object(v2 p) : pos(p), speed({ 0, 0 }) {};
 	game_object(v2 p, v2 v) : pos(p), speed(v) {};
 
+	virtual v2 getSize() = 0;
+	virtual void move();
+	virtual bool inGame() = 0;
+		
 	static void setWindowSize(int W, int H) {
 		windowSize.x = W;
 		windowSize.y = H;
@@ -34,36 +43,23 @@ public:
 	void setSpeed(v2 s) {
 		speed = s;
 	}
-	virtual v2 getSize() = 0;
-	virtual void move();
-	virtual bool isAlife() = 0;
 	static void setRadius(int r) {
 		radius = r;
 	}
 	v2 getPos() {
 		return pos;
 	}
-	static void setDealay(int d) {
-		delay = d;
-	}
-
-	static void setMainTime() {
+	static void globalClockReset() {
 		mainTime = 0;
 	}
 
-	static void apdateMainTime() {
+	static void globalClockTick() {
 		mainTime++;
 	}
 
 	static v2 windowSize;
 	static int create_random(int n);
 
-protected:
-	v2 pos, speed;
-	void drawNGon(int n);
-	static int mainTime;
-	static int delay; 
-	static int radius; 
 };
 #endif
 

@@ -7,7 +7,7 @@ OBJECT_DIR=objects
 DBG_NAME=debug
 BIN_NAME=build
 
-SOURCES=main add_ball ball block bonus change_ball_speed change_paddle_size game_object game make_bottom paddle sticking
+SOURCES=main ball block bonus game_object game paddle
 
 DBG_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix _DBG.o,$(SOURCES)))
 OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(SOURCES)))

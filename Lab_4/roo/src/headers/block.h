@@ -5,8 +5,7 @@
 #include "bonus.h"
 #define UNDEAD_THRESHOLD 5
 
-class block : public game_object
-{
+class block : public game_object {
 public:
     static std::set<block*> blocks;
     block(v2 p) : game_object(p), hp(create_random(UNDEAD_THRESHOLD) + 1) {
@@ -17,7 +16,7 @@ public:
     int getHP() {
         return hp;
     }
-    virtual bool isAlife() override;
+    virtual bool inGame() override;
     static void setSize(v2 s);
     static void drawAllBlocks();
 

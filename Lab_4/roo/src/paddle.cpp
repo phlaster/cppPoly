@@ -9,46 +9,26 @@ void paddle::changeSize() {
 }
 
 void paddle::drawPaddle() {
-	if (mainTime - change_size_time < delay) {
-		glBegin(GL_QUADS);
-		glColor3f(0.0f, 1.0f, 0.0f);
-		glVertex2f(pos.x - size.x, pos.y - size.y / 2);
-		glVertex2f(pos.x - size.x, pos.y + size.y / 2);
-		glVertex2f(pos.x + size.x, pos.y + size.y / 2);
-		glVertex2f(pos.x + size.x, pos.y - size.y / 2);
-		glEnd();
-	}
-	else {
-		glBegin(GL_QUADS);
-		glColor3f(0.5f, 0.0f, 0.3f);
-		glVertex2f(pos.x - size.x / 2, pos.y - size.y / 2);
-		glVertex2f(pos.x - size.x / 2, pos.y + size.y / 2);
-		glVertex2f(pos.x + size.x / 2, pos.y + size.y / 2);
-		glVertex2f(pos.x + size.x / 2, pos.y - size.y / 2);
-		glEnd();
-	}
+	glBegin(GL_QUADS);
+	glColor3f(0.5f, 0.0f, 0.3f);
+	glVertex2f(pos.x - size.x / 2, pos.y - size.y / 2);
+	glVertex2f(pos.x - size.x / 2, pos.y + size.y / 2);
+	glVertex2f(pos.x + size.x / 2, pos.y + size.y / 2);
+	glVertex2f(pos.x + size.x / 2, pos.y - size.y / 2);
+	glEnd();
 }
 
 void paddle::moveLeft() {
-	int sp = 5;
-	if (mainTime - change_size_time <= delay && pos.x - size.x - sp < 0) {
-		return;
+	if (pos.x - size.x > 0){
+		pos.x -= 10 * 5;
 	}
-	if (mainTime - change_size_time > delay && pos.x - size.x / 2 - sp < 0) {
-		return;
-	}
-	pos.x -= 10 * sp;
+
 }
 
 void paddle::moveRight() {
-	int sp = 5;
-	if (mainTime - change_size_time <= delay && pos.x + size.x + sp > windowSize.x) {
-		return;
+	if (pos.x + size.x < windowSize.x){
+		pos.x += 10 * 5;
 	}
-	if (mainTime - change_size_time > delay && pos.x + size.x / 2 + sp > windowSize.x) {
-		return;
-	}
-	pos.x += 10 * sp;
 }
 
 void paddle::activateSticking() {

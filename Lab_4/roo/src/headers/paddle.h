@@ -2,9 +2,7 @@
 #define INC_PADDLE_H
 #include "game_object.h"
 
-class paddle :
-    public game_object
-{
+class paddle : public game_object {
 public:
     static paddle* mainPaddle;
     paddle() :game_object({ 300, 100 }) {
@@ -26,7 +24,7 @@ public:
     void notReadyToStick() {
         to_stick = false;
     }
-    virtual bool isAlife() {
+    virtual bool inGame() {
         return true;
     }
 private:

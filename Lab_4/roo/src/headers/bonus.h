@@ -1,6 +1,7 @@
-#ifndef INC_BONUS_H
-#define INC_BONUS_H
+#ifndef BONUSES_H
+#define BONUSES_H
 
+#include <GL/freeglut.h>
 #include "game_object.h"
 #include <set>
 
@@ -18,7 +19,7 @@ public:
     }
 
     virtual void activate() = 0;
-    virtual bool isAlife() override;
+    virtual bool inGame() override;
 
     virtual ~bonus() {
         bonuses.erase(this);
@@ -27,5 +28,49 @@ public:
 protected:
     virtual void drawBonus() = 0;
 };
+
+
+
+class change_paddle_size : public bonus {
+public:
+	change_paddle_size(v2 p) :bonus(p) {};
+	virtual void drawBonus() override;
+	virtual void activate() override;
+};
+
+
+
+class change_ball_speed : public bonus {
+public:
+	change_ball_speed(v2 p) : bonus(p) {};
+	virtual void drawBonus() override;
+	virtual void activate() override;
+};
+
+
+class add_ball : public bonus{
+public:
+	add_ball(v2 p) :bonus(p) {};
+	virtual void drawBonus() override;
+	virtual void activate() override;
+};
+
+
+class make_shield :	public bonus {
+public:
+	make_shield(v2 p) :bonus(p) {};
+	virtual void drawBonus() override;
+	virtual void activate() override;
+};
+
+
+class sticking : public bonus
+{
+public:
+	sticking(v2 p) : bonus(p) {};
+	virtual void drawBonus() override;
+	virtual void activate() override;
+};
+
 
 #endif

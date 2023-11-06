@@ -52,12 +52,13 @@ bool win() {
 	return f;
 }
 
-void game::mechanic() {
+void game::theLogic() {
 	if (ball::balls.empty() || win()) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		exit(0);
 	}
-	game_object::apdateMainTime();
+
+	game_object::globalClockTick();
 	ball* to_deleteBall = NULL;
 	for (auto u : ball::balls) {
 		u->move();
@@ -65,7 +66,7 @@ void game::mechanic() {
 			delete to_deleteBall;
 			to_deleteBall = NULL;
 		}
-		if (!u->isAlife()) {
+		if (!u->inGame()) {
 			to_deleteBall = u;
 		}
 	}
@@ -77,7 +78,7 @@ void game::mechanic() {
 			delete to_deleteBonus;
 			to_deleteBonus = NULL;
 		}
-		if (!u->isAlife()) {
+		if (!u->inGame()) {
 			to_deleteBonus = u;
 		}
 	}
@@ -118,7 +119,7 @@ void game::mechanic() {
 			}
 			if (touch(u, v)!=empty) {
 				v->touch();
-				if (!v->isAlife()) {
+				if (!v->inGame()) {
 					to_deleteBlock = v;
 				}
 				u->pushOff(v);
@@ -127,7 +128,6 @@ void game::mechanic() {
 	}
 	if (to_deleteBlock) delete to_deleteBlock;
 }
-
 
 void renderScene() {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -139,7 +139,7 @@ void renderScene() {
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	CurrentInstance->mechanic();
+	CurrentInstance->theLogic();
 	block::drawAllBlocks();
 	bonus::drawAllBonuses();
 	ball::drawAllBalls();
