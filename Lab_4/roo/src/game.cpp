@@ -2,24 +2,46 @@
 #include <GL/freeglut.h>
 #include <chrono>
 #include <thread>
+#include <vector>
 
 v2 empty = { -1, -1 };
 
 void game::create_field() {
-	for (double x = 0; x < game_object::windowSize.x; x += block_size.x) {
-		for (double y = game_object::windowSize.y; y >= game_object::windowSize.y / 2; y -= block_size.y) {
-			int chance = game_object::create_random((game_object::windowSize.y - y) / block_size.y + 1);
-			if (chance == 0) {
-				block* p = new block({ x + block_size.x / 2, y - block_size.y / 2 });
-			}
-		}
-	}
+    std::vector<std::vector<int>> field = {
+        {5,  2,  4,  4,  4,  4,  4,  4,  2,  5},
+        {5,  3,  4,  4,  2,  2,  4,  4,  3,  5},
+        {5,  4,  3,  3,  3,  3,  3,  3,  4,  5},
+        {5,  5,  5,  5,  5,  5,  5,  5,  5,  5},
+        {0,  4,  1,  4,  0,  0,  4,  1,  4,  0},
+        {0,  4,  4,  4,  1,  1,  4,  4,  4,  0},
+        {0,  2,  3,  1,  1,  1,  1,  3,  2,  0},
+        {2,  2,  2,  2,  0,  0,  2,  2,  2,  2},
+        {1,  0,  0,  1,  0,  0,  1,  0,  0,  1},
+        {1,  3,  3,  3,  0,  0,  3,  3,  3,  1},
+        {1,  1,  5,  5,  0,  0,  5,  5,  1,  1},
+        {1,  0,  0,  0,  0,  0,  0,  0,  0,  1}
+    };
+    double x_0 = 1.5 * block_size.x;
+    double dx =  block_size.x;
+    double y_0 = game_object::windowSize.y - 2 * block_size.y;
+    double dy = block_size.y;
+
+    for (int i = 0; i < field.size(); i++) {
+        for (int j = 0; j < field[i].size(); j++) {
+            if (field[i][j] == 0) {
+                continue;
+            }
+
+            double x = x_0 + j * dx;
+            double y = y_0 - i * dy;
+
+            block* new_block = new block({x, y}, field[i][j]);
+        }
+    }
 }
 
+
 game* CurrentInstance;
-
-// extern "C"
-
 
 v2 game::touch(game_object* f, game_object* s) {
     double xOverlap = std::max(0.0, std::min(f->getPos().x + f->getSize().x / 2, s->getPos().x + s->getSize().x / 2) - std::max(f->getPos().x - f->getSize().x / 2, s->getPos().x - s->getSize().x / 2));
@@ -40,6 +62,7 @@ void game::initGame(int argc, char** argv) {
 	initGlutFunctions();
 	glutMainLoop();
 }
+
 
 bool win() {
 	bool f = true;
@@ -145,6 +168,7 @@ void game::theLogic() {
 }
 
 void renderScene() {
+    glClearColor(0.18, 0.15, 0.36, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -163,7 +187,7 @@ void renderScene() {
 	glutPostRedisplay();
 }
 
-void processNormalKeys(unsigned char key, int x, int y) {
+void keypress(unsigned char key, int x, int y) {
 	if (key == 27) {
 		exit(0);
 	}
@@ -190,6 +214,6 @@ void game::initGlutFunctions() {
 	CurrentInstance = this;
 	::glutDisplayFunc(::renderScene);
 	::glutIdleFunc(::renderScene);
-	::glutKeyboardFunc(::processNormalKeys);
+	::glutKeyboardFunc(::keypress);
 	::glutReshapeFunc(::resize);
 }

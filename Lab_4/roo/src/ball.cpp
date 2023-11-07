@@ -20,7 +20,7 @@ void ball::makeShield() {
 
 void ball::drawAllBalls() {
     for (auto u : balls) {
-        glColor3f(1.0f, 1.0f, 1.0f);
+        glColor3f(1.0, 0.85, 1.0);
         u->drawBall();
     }
 }
@@ -58,8 +58,13 @@ void ball::move() {
     pos.x += speed.x;
     pos.y += speed.y;
 
-    if (pos.x - 0.95*radius < 0 || pos.x + 1.05*radius > windowSize.x) {
+    if (pos.x - radius < 0) {
         speed.x *= -1;
+        pos.x = radius + 0.5;
+    }
+    if (pos.x + radius > windowSize.x){
+        speed.x *= -1;
+        pos.x = windowSize.x - radius - 0.5;
     }
 
     if (shield && pos.y - radius < 0) {

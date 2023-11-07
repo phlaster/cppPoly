@@ -21,19 +21,19 @@ void block::drawBlock() {
 	float r,g,b;
 	switch (hp){
 		case 1:
-			r=0.53; g=0.69; b=0.87;
+			r=0.77; g=0.75; b=0.95;
 			break;
 		case 2:
-			r=0.42; g=0.51; b=0.69;
+			r=0.57; g=0.54; b=0.73;
 			break;
 		case 3:
-			r=0.31; g=0.39; b=0.52;
+			r=0.46; g=0.44; b=0.62;
 			break;
 		case 4:
-			r=0.23; g=0.28; b=0.38;
+			r=0.31; g=0.28; b=0.48;
 			break;
 		case 5:
-			r=0.37; g=0.26; b=0.42;
+			r=0.46; g=0.06; b=0.32;
 			break;
 	}
 	glBegin(GL_QUADS);

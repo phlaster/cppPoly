@@ -8,7 +8,10 @@
 class block : public game_object {
 public:
     static std::set<block*> blocks;
-    block(v2 p) : game_object(p), hp(create_random(UNDEAD_THRESHOLD) + 1) {
+    block(v2 p) : game_object(p), hp(create_random(UNDEAD_THRESHOLD-1) + 1) {
+        blocks.insert(this);
+    };
+    block(v2 p, int hp) : game_object(p), hp(hp) {
         blocks.insert(this);
     };
 

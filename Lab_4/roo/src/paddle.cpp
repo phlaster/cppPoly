@@ -1,6 +1,7 @@
 #include "headers/paddle.h"
 #include <GL/freeglut.h>
-#include <iostream>
+#include <cmath>
+
 
 paddle* paddle::mainPaddle;
 paddle* sl = new paddle;
@@ -9,9 +10,9 @@ void paddle::drawPaddle() {
 	glBegin(GL_QUADS);
 
 	if (!isMagnetic)
-		glColor3f(0.5f, 0.5f, 0.6f);
+	 	glColor3f(0.58f, 0.52f, 0.97f);
 	else
-	 	glColor3f(0.7f, 0.4f, 0.7f);
+		glColor3f(0.29f, 0.18f, 0.96f);
 
 	pos.x += speed.x;
 
@@ -24,19 +25,25 @@ void paddle::drawPaddle() {
 }
 
 void paddle::moveLeft() {
-	if (pos.x - size.x > 0){
+	if (pos.x - size.x/1.5 > 0){
+		if (std::fabs(speed.x == 0)){
+			speed.x = -25;
+		}
 		speed.x = -12;
 	}
 
 }
 void paddle::moveRight() {
-	if (pos.x + size.x < windowSize.x){
+	if (pos.x + size.x/1.5 < windowSize.x){
+		if (std::fabs(speed.x == 0)){
+			speed.x = 25;
+		}
 		speed.x = 12;
 	}
 }
 
 void paddle::stop(){
-	speed.x = 0;
+	speed.x /= 1.4;
 }
 
 void paddle::magnetize() {
