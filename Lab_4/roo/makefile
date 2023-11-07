@@ -7,7 +7,7 @@ OBJECT_DIR=objects
 DBG_NAME=debug
 BIN_NAME=build
 
-SOURCES=main ball block bonus game_object game paddle
+SOURCES=main Ball Brick Bonus Brick Entity GameRunner Paddle
 
 DBG_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix _DBG.o,$(SOURCES)))
 OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(SOURCES)))
@@ -34,4 +34,4 @@ clean:
 
 
 purge:
-	rm -rf $(OBJECT_DIR)/; rm ./*.out;
+	rm -rf $(OBJECT_DIR)/;
