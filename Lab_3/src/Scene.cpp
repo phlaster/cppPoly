@@ -15,23 +15,6 @@ bool isThird(GemTable const& gems, size_t i, size_t j, SpriteEnum color) {
     return cond1 || cond2;
 }
 
-// bool isThird(GemTable const& gems, int i, int j, SpriteEnum color) {
-    
-//     if (i < 2){
-//         return false;
-//     } else {
-//         bool cond1a = (gems.at(i - 1).at(j)->getSprite() == color);
-//         bool cond1b = (gems.at(i - 2).at(j)->getSprite() == color);
-//         bool cond1 = cond1a && cond1b;
-
-//         bool cond2a = (gems.at(i).at(j - 1)->getSprite() == color);
-//         bool cond2b = (gems.at(i).at(j - 2)->getSprite() == color);
-//         bool cond2 = cond2a && cond2b;
-//         return cond1 || cond2;
-//     }
-// }
-
-
 // Экранная координата гема в (i,j) 
 sf::Vector2f Scene::calculPosition(size_t i, size_t j) {
     return sf::Vector2f(x0 + Gem::GEM_SIZE / 2.0f + j * Gem::GEM_SIZE,
