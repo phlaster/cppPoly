@@ -24,7 +24,7 @@ GameRunner::~GameRunner(){
 }
 void GameRunner::create_field() {
     std::vector<std::vector<int>> field = {
-        {5,  2,  4,  4,  4,  4,  4,  4,  2,  5},
+        {0,  2,  4,  4,  4,  4,  4,  4,  2,  0},
         {5,  3,  4,  4,  2,  2,  4,  4,  3,  5},
         {5,  4,  3,  3,  3,  3,  3,  3,  4,  5},
         {5,  5,  5,  5,  5,  5,  5,  5,  5,  5},
@@ -226,9 +226,9 @@ void keypress(unsigned char key, int x, int y) {
 			}
 		}
 	}
-	if (key == 'a' || key == 'A') {
+	if (key == 'a') {
 		Paddle::mainPaddle->moveLeft();
-	} else if (key == 'd' || key == 'D') {
+	} else if (key == 'd') {
 		Paddle::mainPaddle->moveRight();
 	}
 }
