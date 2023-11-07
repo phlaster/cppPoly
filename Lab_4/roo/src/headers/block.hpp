@@ -2,30 +2,22 @@
 #define INC_BLOCK_H
 #include <ctime>
 #include <set>
-#include "bonus.h"
+#include "bonus.hpp"
 #define UNDEAD_THRESHOLD 5
 
 class block : public game_object {
 public:
     static std::set<block*> blocks;
-    block(v2 p) : game_object(p), hp(create_random(UNDEAD_THRESHOLD-1) + 1) {
-        blocks.insert(this);
-    };
-    block(v2 p, int hp) : game_object(p), hp(hp) {
-        blocks.insert(this);
-    };
+    block(v2 p);
+    block(v2 p, int hp);
 
     void touch();
-    int getHP() {
-        return hp;
-    }
+    int getHP();
     virtual bool inGame() override;
     static void setSize(v2 s);
     static void drawAllBlocks();
 
-    virtual v2 getSize() override{
-        return size;
-    }
+    virtual v2 getSize() override;
 
     virtual ~block() {
         blocks.erase(this);

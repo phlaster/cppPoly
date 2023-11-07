@@ -1,22 +1,15 @@
 #ifndef INC_BALL_H
 #define INC_BALL_H
-#include "game_object.h"
+
+#include "game_object.hpp"
 #include <set>
 
-class ball : public game_object {
+class Ball : public game_object {
 public:
-    static std::set<ball*> balls;
+    static std::set<Ball*> balls;
 
-    ball(v2 p) : game_object(p) {
-        sticking = true;
-        normal_speed = 4;
-        shield = true;
-        balls.insert(this);
-    }
-
-    virtual ~ball() {
-        balls.erase(this);
-    }
+    Ball(v2 p);
+    virtual ~Ball();
 
     static void initBonuses();
     static void makeShield();
@@ -26,19 +19,15 @@ public:
     virtual bool inGame() override;
     virtual void move() override;
     virtual v2 getSize() override;
-
     void stick();
     void notstick();
-    bool isSticking() {
-        return sticking;
-    }
-
+    bool isSticking();
     void bounce(game_object* v);
 
 private:
-
     void drawBall();
     static bool shield;
     bool sticking; 
 };
+
 #endif

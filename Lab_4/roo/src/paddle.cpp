@@ -1,4 +1,4 @@
-#include "headers/paddle.h"
+#include "headers/paddle.hpp"
 #include <GL/freeglut.h>
 #include <cmath>
 

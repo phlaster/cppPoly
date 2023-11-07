@@ -1,4 +1,5 @@
-#include "headers/game.h"
+#include "headers/game.hpp"
+#include "headers/block.hpp"
 #include <GL/freeglut.h>
 #include <chrono>
 #include <thread>
@@ -6,6 +7,21 @@
 
 v2 empty = { -1, -1 };
 
+game::game() {
+    block_size = { 50, 20 };
+    game_object::setWindowSize(600, 600);
+    game_object::globalClockReset();
+    game_object::setRadius(10);
+    block::setSize(block_size);
+    Ball::initBonuses();
+    Ball* p = new Ball({ 0, 0 });
+    Ball::balls.insert(p);
+    create_field();
+}
+
+game::~game(){
+    exit(0);
+}
 void game::create_field() {
     std::vector<std::vector<int>> field = {
         {5,  2,  4,  4,  4,  4,  4,  4,  2,  5},
@@ -21,13 +37,17 @@ void game::create_field() {
         {1,  1,  5,  5,  0,  0,  5,  5,  1,  1},
         {1,  0,  0,  0,  0,  0,  0,  0,  0,  1}
     };
+    //     std::vector<std::vector<int>> field = {
+    //         {},{},{},{},{},{},{},{},{},{},{},{},
+    //     {1,  5,  0,  0,  0,  5,  0,  0,  0,  0}
+    // };
     double x_0 = 1.5 * block_size.x;
     double dx =  block_size.x;
     double y_0 = game_object::windowSize.y - 2 * block_size.y;
     double dy = block_size.y;
 
-    for (int i = 0; i < field.size(); i++) {
-        for (int j = 0; j < field[i].size(); j++) {
+    for (size_t i = 0; i < field.size(); i++) {
+        for (size_t j = 0; j < field[i].size(); j++) {
             if (field[i][j] == 0) {
                 continue;
             }
@@ -44,13 +64,20 @@ void game::create_field() {
 game* CurrentInstance;
 
 v2 game::touch(game_object* f, game_object* s) {
-    double xOverlap = std::max(0.0, std::min(f->getPos().x + f->getSize().x / 2, s->getPos().x + s->getSize().x / 2) - std::max(f->getPos().x - f->getSize().x / 2, s->getPos().x - s->getSize().x / 2));
-    double yOverlap = std::max(0.0, std::min(f->getPos().y + f->getSize().y / 2, s->getPos().y + s->getSize().y / 2) - std::max(f->getPos().y - f->getSize().y / 2, s->getPos().y - s->getSize().y / 2));
+    double xOverlap = std::max(
+        0.0,
+        std::min(f->getPos().x + f->getSize().x / 2, s->getPos().x + s->getSize().x / 2) -
+        std::max(f->getPos().x - f->getSize().x / 2, s->getPos().x - s->getSize().x / 2)
+    );
+    double yOverlap = std::max(
+        0.0,
+        std::min(f->getPos().y + f->getSize().y / 2, s->getPos().y + s->getSize().y / 2) -
+        std::max(f->getPos().y - f->getSize().y / 2, s->getPos().y - s->getSize().y / 2)
+    );
 
     if (xOverlap > 0 && yOverlap > 0) {
         return { xOverlap, yOverlap };
     }
-
     return { -1, -1 };
 }
 void game::initGame(int argc, char** argv) {
@@ -76,15 +103,15 @@ bool win() {
 }
 
 void endgame_check(){
-	if (ball::balls.empty() || win()) {
+	if (Ball::balls.empty() || win()) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		exit(0);
 	}
 }
 
 void update_balls() {
-    ball* to_deleteBall = nullptr;
-    for (auto u : ball::balls) {
+    Ball* to_deleteBall = nullptr;
+    for (auto u : Ball::balls) {
         u->move();
         if (!u->inGame()) {
             to_deleteBall = u;
@@ -92,7 +119,7 @@ void update_balls() {
     }
     if (to_deleteBall) {
         delete to_deleteBall;
-        ball::balls.erase(to_deleteBall);
+        Ball::balls.erase(to_deleteBall);
     }
 }
 
@@ -111,7 +138,7 @@ void update_bonuses() {
 }
 
 void handle_ball_paddle_collisions() {
-    for (auto u : ball::balls) {
+    for (auto u : Ball::balls) {
         if (!u->isSticking() && game::touch(u, paddle::mainPaddle) != empty) {
             if (paddle::mainPaddle->isReadyToStick()) {
                 paddle::mainPaddle->unMagnit();
@@ -140,7 +167,7 @@ void handle_bonus_paddle_collisions() {
 
 void handle_ball_block_collisions() {
     block* to_deleteBlock = nullptr;
-    for (auto u : ball::balls) {
+    for (auto u : Ball::balls) {
         for (auto v : block::blocks) {
             if (game::touch(u, v) != empty) {
                 v->touch();
@@ -181,7 +208,7 @@ void renderScene() {
 	CurrentInstance->theLogic();
 	block::drawAllBlocks();
 	bonus::drawAllBonuses();
-	ball::drawAllBalls();
+	Ball::drawAllBalls();
 	paddle::mainPaddle->drawPaddle();
 	glutSwapBuffers();
 	glutPostRedisplay();
@@ -192,10 +219,10 @@ void keypress(unsigned char key, int x, int y) {
 		exit(0);
 	}
 	if (key == ' ') {
-		for (auto u : ball::balls) {
+		for (auto u : Ball::balls) {
 			if (u->isSticking()) {
 				u->notstick();
-				u->setSpeed({ 0, ball::normal_speed });
+				u->setSpeed({ 0, Ball::normal_speed });
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-#include "headers/game_object.h"
+#include "headers/game_object.hpp"
 #include <GL/freeglut.h>
 #include <cmath>
 

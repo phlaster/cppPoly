@@ -2,7 +2,7 @@
 #define BONUSES_H
 
 #include <GL/freeglut.h>
-#include "game_object.h"
+#include "game_object.hpp"
 #include <set>
 
 class bonus : public game_object {

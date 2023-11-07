@@ -1,11 +1,25 @@
 #include <GL/freeglut.h>
 
-#include "headers/block.h"
-#include "headers/bonus.h"
+#include "headers/block.hpp"
+#include "headers/bonus.hpp"
 
 std::set <block*> block::blocks;
 v2 block::size;
 
+block::block(v2 p) : game_object(p), hp(create_random(UNDEAD_THRESHOLD-1) + 1) {
+	blocks.insert(this);
+};
+
+block::block(v2 p, int hp) : game_object(p), hp(hp) {
+	blocks.insert(this);
+};
+
+int block::getHP() {
+	return hp;
+}
+v2 block::getSize()  {
+	return size;
+}
 void block::setSize(v2 s) {
 	size = s;
 }
@@ -15,9 +29,6 @@ bool block::inGame() {
 }
 
 void block::drawBlock() {
-
-	float greenComponent = 1.0 - hp / 3.0;
-	float redComponent = hp / 3.0;
 	float r,g,b;
 	switch (hp){
 		case 1:

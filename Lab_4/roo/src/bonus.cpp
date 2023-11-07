@@ -1,6 +1,6 @@
-#include "headers/bonus.h"
-#include "headers/ball.h"
-#include "headers/paddle.h"
+#include "headers/bonus.hpp"
+#include "headers/Ball.hpp"
+#include "headers/paddle.hpp"
 
 std::set <bonus*> bonus::bonuses;
 
@@ -20,12 +20,12 @@ void add_ball::drawBonus() {
 	drawPoly(20);
 }
 void add_ball::activate() {
-	ball* p = new ball(pos);
+	Ball* p = new Ball(pos);
 }
 
 
 void make_shield::activate() {
-	ball::makeShield();
+	Ball::makeShield();
 }
 
 void make_shield::drawBonus() {

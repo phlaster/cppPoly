@@ -1,6 +1,6 @@
 #ifndef INC_PADDLE_H
 #define INC_PADDLE_H
-#include "game_object.h"
+#include "game_object.hpp"
 
 class paddle : public game_object {
 public:

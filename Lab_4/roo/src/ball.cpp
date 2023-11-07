@@ -1,31 +1,41 @@
-#include "headers/ball.h"
-#include "headers/paddle.h"
-#include "headers/game.h"
+#include "headers/Ball.hpp"
+#include "headers/paddle.hpp"
+#include "headers/game.hpp"
 #include <GL/freeglut.h>
 #include <climits>
 #include <cmath>
 
-std::set<ball*> ball::balls;
-bool ball::shield;
-double ball::normal_speed;
-v2 emp = { -1, -1 };
+std::set<Ball*> Ball::balls;
+bool Ball::shield;
+double Ball::normal_speed;
+v2 badVector = { -1, -1 };
 
-void ball::initBonuses() {
+Ball::Ball(v2 p) : game_object(p) {
+    sticking = true;
+    normal_speed = 4;
+    shield = true;
+    balls.insert(this);
+}
+Ball::~Ball() {
+    balls.erase(this);
+}
+
+void Ball::initBonuses() {
     shield = false;
 }
 
-void ball::makeShield() {
+void Ball::makeShield() {
     shield = true;
 }
 
-void ball::drawAllBalls() {
+void Ball::drawAllBalls() {
     for (auto u : balls) {
         glColor3f(1.0, 0.85, 1.0);
         u->drawBall();
     }
 }
 
-void ball::drawBall() {
+void Ball::drawBall() {
     drawPoly(30);
     if (shield) {
         glBegin(GL_QUADS);
@@ -38,12 +48,12 @@ void ball::drawBall() {
     }
 }
 
-bool ball::inGame() {
+bool Ball::inGame() {
     if (pos.y < 0) return false;
     return true;
 }
 
-void ball::move() {
+void Ball::move() {
     if (sticking) {
         v2 t = paddle::mainPaddle->getPos();
         v2 s = paddle::mainPaddle->getSize();
@@ -73,29 +83,31 @@ void ball::move() {
     }
 }
 
-v2 ball::getSize() {
+v2 Ball::getSize() {
     return { radius * 2.0, radius * 2.0 };
 }
 
-void ball::stick() {
+void Ball::stick() {
     sticking = true;
 }
 
-void ball::notstick() {
+void Ball::notstick() {
     sticking = false;
 }
-
-void ball::bounce(game_object* v) {
+bool Ball::isSticking() {
+    return sticking;
+}
+void Ball::bounce(game_object* v) {
     v2 t = game::touch(this, v);
 
     double dx = this->getPos().x - v->getPos().x;
     double dy = this->getPos().y - v->getPos().y;
-    double angle = atan2(dy, dx);
+    double alpha = atan2(dy, dx);
 
     double speed = normal_speed + 0.01;
 
-    double sx = speed * cos(angle);
-    double sy = speed * sin(angle);
+    double sx = speed * cos(alpha);
+    double sy = speed * sin(alpha);
 
     if (v == paddle::mainPaddle) {
         sy = fabs(sy);
@@ -103,7 +115,7 @@ void ball::bounce(game_object* v) {
 
     this->speed = { sx, sy };
 
-    while (game::touch(this, v) != emp) {
+    while (game::touch(this, v) != badVector) {
         this->move();
     }
 }
