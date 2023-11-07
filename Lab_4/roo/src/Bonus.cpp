@@ -1,17 +1,17 @@
-#include "headers/bonus.hpp"
+#include "headers/Bonus.hpp"
 #include "headers/Ball.hpp"
-#include "headers/paddle.hpp"
+#include "headers/Paddle.hpp"
 
-std::set <bonus*> bonus::bonuses;
+std::set <Bonus*> Bonus::bonuses;
 
-void bonus::drawAllBonuses() {
+void Bonus::drawAllBonuses() {
 	glColor3f(1.0f, 0.5f, 0.31f);
 	for (auto u : bonuses) {
 		u->drawBonus();
 	}
 }
 
-bool bonus::inGame() {
+bool Bonus::inGame() {
 	if (pos.y > windowSize.y || pos.y < 0) return false;
 	return true;
 }
@@ -36,5 +36,5 @@ void sticking::drawBonus() {
 	drawPoly(3);
 }
 void sticking::activate() {
-	paddle::mainPaddle->magnetize();
+	Paddle::mainPaddle->magnetize();
 }

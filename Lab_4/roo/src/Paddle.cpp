@@ -1,12 +1,12 @@
-#include "headers/paddle.hpp"
+#include "headers/Paddle.hpp"
 #include <GL/freeglut.h>
 #include <cmath>
 
 
-paddle* paddle::mainPaddle;
-paddle* sl = new paddle;
+Paddle* Paddle::mainPaddle;
+Paddle* sl = new Paddle;
 
-void paddle::drawPaddle() {
+void Paddle::drawPaddle() {
 	glBegin(GL_QUADS);
 
 	if (!isMagnetic)
@@ -24,7 +24,7 @@ void paddle::drawPaddle() {
 	glEnd();
 }
 
-void paddle::moveLeft() {
+void Paddle::moveLeft() {
 	if (pos.x - size.x/1.5 > 0){
 		if (std::fabs(speed.x == 0)){
 			speed.x = -25;
@@ -33,7 +33,7 @@ void paddle::moveLeft() {
 	}
 
 }
-void paddle::moveRight() {
+void Paddle::moveRight() {
 	if (pos.x + size.x/1.5 < windowSize.x){
 		if (std::fabs(speed.x == 0)){
 			speed.x = 25;
@@ -42,14 +42,24 @@ void paddle::moveRight() {
 	}
 }
 
-void paddle::stop(){
+void Paddle::stop(){
 	speed.x /= 1.4;
 }
 
-void paddle::magnetize() {
+void Paddle::magnetize() {
 	isMagnetic = true;
 }
 
-v2 paddle::getSize() {
+v2 Paddle::getSize() {
 	return size;
+}
+
+bool Paddle::isReadyToStick() {
+	return isMagnetic;
+}
+void Paddle::unMagnit() {
+	isMagnetic = false;
+}
+bool Paddle::inGame() {
+	return true;
 }

@@ -1,7 +1,7 @@
-#include "headers/game.hpp"
+#include "headers/GameRunner.hpp"
 
 int main(int argc, char** argv) {
-	game G;
+	GameRunner G;
 	G.initGame(argc, argv);
 	return 0;
 }

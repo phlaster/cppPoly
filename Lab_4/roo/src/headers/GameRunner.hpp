@@ -1,19 +1,19 @@
 #ifndef INC_GAME_H
 #define INC_GAME_H
-#include "game_object.hpp"
-#include "block.hpp"
+#include "Entity.hpp"
+#include "Brick.hpp"
 #include "Ball.hpp"
-#include "bonus.hpp"
-#include "paddle.hpp"
+#include "Bonus.hpp"
+#include "Paddle.hpp"
 
 
-class game{
+class GameRunner{
 public:
-	game();
-	~game();
+	GameRunner();
+	~GameRunner();
 	void initGame(int argc, char** argv);
 	void theLogic();
-	static v2 touch(game_object* f, game_object* s);
+	static v2 touch(Entity* f, Entity* s);
 
 private:
 	void initGlutFunctions();

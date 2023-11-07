@@ -2,14 +2,14 @@
 #define BONUSES_H
 
 #include <GL/freeglut.h>
-#include "game_object.hpp"
+#include "Entity.hpp"
 #include <set>
 
-class bonus : public game_object {
+class Bonus : public Entity {
 public:
-    static std::set<bonus*> bonuses;
+    static std::set<Bonus*> bonuses;
 
-    bonus(v2 p) : game_object(p, { 0, -1.0 }) {
+    Bonus(v2 p) : Entity(p, { 0, -1.0 }) {
         bonuses.insert(this);
     }
 
@@ -21,7 +21,7 @@ public:
     virtual void activate() = 0;
     virtual bool inGame() override;
 
-    virtual ~bonus() {
+    virtual ~Bonus() {
         bonuses.erase(this);
     }
 
@@ -31,43 +31,43 @@ protected:
 
 
 
-// class change_paddle_size : public bonus {
+// class change_paddle_size : public Bonus {
 // public:
-// 	change_paddle_size(v2 p) :bonus(p) {};
+// 	change_paddle_size(v2 p) :Bonus(p) {};
 // 	virtual void drawBonus() override;
 // 	virtual void activate() override;
 // };
 
 
 
-// class change_ball_speed : public bonus {
+// class change_ball_speed : public Bonus {
 // public:
-// 	change_ball_speed(v2 p) : bonus(p) {};
+// 	change_ball_speed(v2 p) : Bonus(p) {};
 // 	virtual void drawBonus() override;
 // 	virtual void activate() override;
 // };
 
 
-class add_ball : public bonus{
+class add_ball : public Bonus{
 public:
-	add_ball(v2 p) :bonus(p) {};
+	add_ball(v2 p) :Bonus(p) {};
 	virtual void drawBonus() override;
 	virtual void activate() override;
 };
 
 
-class make_shield :	public bonus {
+class make_shield :	public Bonus {
 public:
-	make_shield(v2 p) :bonus(p) {};
+	make_shield(v2 p) :Bonus(p) {};
 	virtual void drawBonus() override;
 	virtual void activate() override;
 };
 
 
-class sticking : public bonus
+class sticking : public Bonus
 {
 public:
-	sticking(v2 p) : bonus(p) {};
+	sticking(v2 p) : Bonus(p) {};
 	virtual void drawBonus() override;
 	virtual void activate() override;
 };

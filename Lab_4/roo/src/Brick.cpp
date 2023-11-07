@@ -1,34 +1,42 @@
 #include <GL/freeglut.h>
 
-#include "headers/block.hpp"
-#include "headers/bonus.hpp"
+#include "headers/Brick.hpp"
+#include "headers/Bonus.hpp"
 
-std::set <block*> block::blocks;
-v2 block::size;
+std::set <Brick*> Brick::blocks;
+v2 Brick::size;
 
-block::block(v2 p) : game_object(p), hp(create_random(UNDEAD_THRESHOLD-1) + 1) {
+Brick::Brick(v2 p) : Entity(p), hp(create_random(UNDEAD_THRESHOLD-1) + 1) {
 	blocks.insert(this);
 };
 
-block::block(v2 p, int hp) : game_object(p), hp(hp) {
+Brick::Brick(v2 p, int hp) : Entity(p), hp(hp) {
 	blocks.insert(this);
-};
+}
 
-int block::getHP() {
+Brick::~Brick(){
+	blocks.erase(this);
+	int chance = create_random(2);
+	if (chance == 0) create_bonus();
+}
+
+int Brick::getHP() {
 	return hp;
 }
-v2 block::getSize()  {
+
+v2 Brick::getSize()  {
 	return size;
 }
-void block::setSize(v2 s) {
+
+void Brick::setSize(v2 s) {
 	size = s;
 }
 
-bool block::inGame() {
+bool Brick::inGame() {
     return (hp > 0);
 }
 
-void block::drawBlock() {
+void Brick::drawBlock() {
 	float r,g,b;
 	switch (hp){
 		case 1:
@@ -56,20 +64,20 @@ void block::drawBlock() {
 	glEnd();
 }
 
-void block::drawAllBlocks() {
+void Brick::drawAllBlocks() {
 	for (auto u : blocks) {
 		u->drawBlock();
 	}
 }
 
-void block::touch() {
+void Brick::touch() {
 	if (hp != UNDEAD_THRESHOLD)
 		hp--;
 }
 
-void block::create_bonus() {
+void Brick::create_bonus() {
 	int var = create_random(3);
-	bonus* p;
+	Bonus* p;
 	switch (var) {
 	case 0:
 		p = new add_ball(pos);

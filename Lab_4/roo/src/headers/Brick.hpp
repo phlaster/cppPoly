@@ -2,15 +2,14 @@
 #define INC_BLOCK_H
 #include <ctime>
 #include <set>
-#include "bonus.hpp"
+#include "Bonus.hpp"
 #define UNDEAD_THRESHOLD 5
 
-class block : public game_object {
+class Brick : public Entity {
 public:
-    static std::set<block*> blocks;
-    block(v2 p);
-    block(v2 p, int hp);
-
+    static std::set<Brick*> blocks;
+    Brick(v2 p);
+    Brick(v2 p, int hp);
     void touch();
     int getHP();
     virtual bool inGame() override;
@@ -18,19 +17,13 @@ public:
     static void drawAllBlocks();
 
     virtual v2 getSize() override;
-
-    virtual ~block() {
-        blocks.erase(this);
-        int chance = create_random(2);
-        if (chance == 0) create_bonus();
-    }
+    virtual ~Brick();
 
 private:
     int hp;
     static v2 size;
     void drawBlock();
     void create_bonus();
-
 };
 #endif
 

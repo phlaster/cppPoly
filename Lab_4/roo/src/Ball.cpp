@@ -1,6 +1,6 @@
 #include "headers/Ball.hpp"
-#include "headers/paddle.hpp"
-#include "headers/game.hpp"
+#include "headers/Paddle.hpp"
+#include "headers/GameRunner.hpp"
 #include <GL/freeglut.h>
 #include <climits>
 #include <cmath>
@@ -10,7 +10,7 @@ bool Ball::shield;
 double Ball::normal_speed;
 v2 badVector = { -1, -1 };
 
-Ball::Ball(v2 p) : game_object(p) {
+Ball::Ball(v2 p) : Entity(p) {
     sticking = true;
     normal_speed = 4;
     shield = true;
@@ -55,8 +55,8 @@ bool Ball::inGame() {
 
 void Ball::move() {
     if (sticking) {
-        v2 t = paddle::mainPaddle->getPos();
-        v2 s = paddle::mainPaddle->getSize();
+        v2 t = Paddle::mainPaddle->getPos();
+        v2 s = Paddle::mainPaddle->getSize();
         pos.x = t.x;
         pos.y = t.y + s.y + radius;
         return;
@@ -97,8 +97,8 @@ void Ball::notstick() {
 bool Ball::isSticking() {
     return sticking;
 }
-void Ball::bounce(game_object* v) {
-    v2 t = game::touch(this, v);
+void Ball::bounce(Entity* v) {
+    v2 t = GameRunner::touch(this, v);
 
     double dx = this->getPos().x - v->getPos().x;
     double dy = this->getPos().y - v->getPos().y;
@@ -109,13 +109,13 @@ void Ball::bounce(game_object* v) {
     double sx = speed * cos(alpha);
     double sy = speed * sin(alpha);
 
-    if (v == paddle::mainPaddle) {
+    if (v == Paddle::mainPaddle) {
         sy = fabs(sy);
     }
 
     this->speed = { sx, sy };
 
-    while (game::touch(this, v) != badVector) {
+    while (GameRunner::touch(this, v) != badVector) {
         this->move();
     }
 }

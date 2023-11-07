@@ -1,10 +1,10 @@
 #ifndef INC_BALL_H
 #define INC_BALL_H
 
-#include "game_object.hpp"
+#include "Entity.hpp"
 #include <set>
 
-class Ball : public game_object {
+class Ball : public Entity {
 public:
     static std::set<Ball*> balls;
 
@@ -22,7 +22,7 @@ public:
     void stick();
     void notstick();
     bool isSticking();
-    void bounce(game_object* v);
+    void bounce(Entity* v);
 
 private:
     void drawBall();
