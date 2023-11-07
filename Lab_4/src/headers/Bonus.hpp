@@ -30,24 +30,6 @@ protected:
 };
 
 
-
-// class change_paddle_size : public Bonus {
-// public:
-// 	change_paddle_size(v2 p) :Bonus(p) {};
-// 	virtual void drawBonus() override;
-// 	virtual void activate() override;
-// };
-
-
-
-// class change_ball_speed : public Bonus {
-// public:
-// 	change_ball_speed(v2 p) : Bonus(p) {};
-// 	virtual void drawBonus() override;
-// 	virtual void activate() override;
-// };
-
-
 class add_ball : public Bonus{
 public:
 	add_ball(v2 p) :Bonus(p) {};
