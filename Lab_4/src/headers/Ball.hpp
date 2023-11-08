@@ -16,9 +16,9 @@ public:
     static void drawAllBalls();
     static double normal_speed;
 
-    virtual bool inGame() override;
+    virtual bool inGame() const override;
     virtual void move() override;
-    virtual v2 getSize() override;
+    virtual v2 getSize() const override;
     void stick();
     void notstick();
     bool isSticking();

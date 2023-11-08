@@ -17,14 +17,14 @@ Brick::Brick(v2 p, int hp) : Entity(p), hp(hp) {
 Brick::~Brick(){
 	blocks.erase(this);
 	int chance = create_random(2);
-	if (chance == 0) create_bonus();
+	if (!chance) create_bonus();
 }
 
 int Brick::getHP() {
 	return hp;
 }
 
-v2 Brick::getSize()  {
+v2 Brick::getSize() const {
 	return size;
 }
 
@@ -32,7 +32,7 @@ void Brick::setSize(v2 s) {
 	size = s;
 }
 
-bool Brick::inGame() {
+bool Brick::inGame() const {
     return (hp > 0);
 }
 
@@ -51,7 +51,7 @@ void Brick::drawBlock() {
 		case 4:
 			r=0.31; g=0.28; b=0.48;
 			break;
-		case 5:
+		case 5: // Undead
 			r=0.46; g=0.06; b=0.32;
 			break;
 	}
@@ -65,28 +65,27 @@ void Brick::drawBlock() {
 }
 
 void Brick::drawAllBlocks() {
-	for (auto u : blocks) {
-		u->drawBlock();
+	for (auto block_i : blocks) {
+		block_i->drawBlock();
 	}
 }
 
-void Brick::touch() {
+void Brick::loose_hp() {
 	if (hp != UNDEAD_THRESHOLD)
 		hp--;
 }
 
 void Brick::create_bonus() {
 	int var = create_random(3);
-	Bonus* p;
 	switch (var) {
 	case 0:
-		p = new add_ball(pos);
+		new add_ball(pos);
 		break;
 	case 1:
-		p = new make_shield(pos);
+		new make_shield(pos);
 		break;
 	case 2:
-		p = new sticking(pos);
+		new sticking(pos);
 		break;
 	}
 }

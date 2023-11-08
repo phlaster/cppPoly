@@ -6,6 +6,12 @@
 Paddle* Paddle::mainPaddle;
 Paddle* sl = new Paddle;
 
+Paddle::Paddle() : Entity({ 300, 100 }) {
+	size = { 80, 10 };
+	mainPaddle = this;
+	isMagnetic = false;
+}
+
 void Paddle::drawPaddle() {
 	glBegin(GL_QUADS);
 
@@ -50,7 +56,7 @@ void Paddle::magnetize() {
 	isMagnetic = true;
 }
 
-v2 Paddle::getSize() {
+v2 Paddle::getSize() const {
 	return size;
 }
 
@@ -60,6 +66,6 @@ bool Paddle::isReadyToStick() {
 void Paddle::unMagnit() {
 	isMagnetic = false;
 }
-bool Paddle::inGame() {
+bool Paddle::inGame() const {
 	return true;
 }

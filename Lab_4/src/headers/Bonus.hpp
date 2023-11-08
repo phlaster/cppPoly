@@ -12,18 +12,15 @@ public:
     Bonus(v2 p) : Entity(p, { 0, -1.0 }) {
         bonuses.insert(this);
     }
-
-    static void drawAllBonuses();
-    virtual v2 getSize() override {
-        return { radius * 2.0, radius * 2.0 };
-    }
-
-    virtual void activate() = 0;
-    virtual bool inGame() override;
-
     virtual ~Bonus() {
         bonuses.erase(this);
     }
+
+    static void drawAllBonuses();
+
+    virtual void activate() = 0;
+    virtual bool inGame() const override;
+
 
 protected:
     virtual void drawBonus() = 0;
@@ -46,8 +43,7 @@ public:
 };
 
 
-class sticking : public Bonus
-{
+class sticking : public Bonus{
 public:
 	sticking(v2 p) : Bonus(p) {};
 	virtual void drawBonus() override;

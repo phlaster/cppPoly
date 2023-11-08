@@ -5,22 +5,19 @@
 class Paddle : public Entity {
 public:
     static Paddle* mainPaddle;
-    Paddle() :Entity({ 300, 100 }) {
-        size = { 80, 10 };
-        mainPaddle = this;
-        isMagnetic = false;
-    }
+    Paddle();
+    virtual void move() override {}; 
+    virtual v2 getSize() const override;
+    virtual bool inGame() const override;
+    
     void changeSize();
     void drawPaddle();
     void moveLeft();
     void moveRight();
     void stop();
-    virtual void move() {}; 
     void magnetize();
-    virtual v2 getSize();
     bool isReadyToStick();
     void unMagnit();
-    virtual bool inGame();
 
 private:
     v2 size;

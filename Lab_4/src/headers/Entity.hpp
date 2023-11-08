@@ -17,34 +17,33 @@ typedef struct v2 {
 	}
 } v2;
 
+const v2 ANTIVECTOR = { -1, -1 };
+
 
 class Entity {
 protected:
 	v2 pos, speed;
 	void drawPoly(int n);
-	static int mainTime;
-	static int radius; 
+	static double radius; 
 
 public:
 	Entity() : pos({ 0, 0 }), speed({ 0, 0 }) {};
 	Entity(v2 p) : pos(p), speed({ 0, 0 }) {};
 	Entity(v2 p, v2 v) : pos(p), speed(v) {};
 
-	virtual v2 getSize() = 0;
-	virtual void move();
-	virtual bool inGame() = 0;
-		
-	static void setWindowSize(int W, int H);
-
-	void setSpeed(v2 s);
-	static void setRadius(int r);
-	v2 getPos();
-	static void globalClockReset();
-
-	static void globalClockTick();
-
 	static v2 windowSize;
+	
+	virtual v2 getSize() const;
+	virtual bool inGame() const = 0;
+	virtual void move();
+	bool touches(const Entity* other) const;
+
+	static void setWindowSize(int W, int H);
+	static void setRadius(int r);
 	static int create_random(int n);
+	
+	void setSpeed(v2 s);
+	v2 getPos() const;
 };
 #endif
 

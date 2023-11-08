@@ -1,6 +1,6 @@
 #include "headers/Ball.hpp"
 #include "headers/Paddle.hpp"
-#include "headers/GameRunner.hpp"
+// #include "headers/GameRunner.hpp"
 #include <GL/freeglut.h>
 #include <climits>
 #include <cmath>
@@ -8,7 +8,6 @@
 std::set<Ball*> Ball::balls;
 bool Ball::shield;
 double Ball::normal_speed;
-v2 badVector = { -1, -1 };
 
 Ball::Ball(v2 p) : Entity(p) {
     sticking = true;
@@ -48,7 +47,7 @@ void Ball::drawBall() {
     }
 }
 
-bool Ball::inGame() {
+bool Ball::inGame() const {
     if (pos.y < 0) return false;
     return true;
 }
@@ -83,8 +82,9 @@ void Ball::move() {
     }
 }
 
-v2 Ball::getSize() {
-    return { radius * 2.0, radius * 2.0 };
+v2 Ball::getSize() const {
+    double d = 2.0 * radius;
+    return { d, d };
 }
 
 void Ball::stick() {
@@ -97,25 +97,22 @@ void Ball::notstick() {
 bool Ball::isSticking() {
     return sticking;
 }
-void Ball::bounce(Entity* v) {
-    v2 t = GameRunner::touch(this, v);
-
-    double dx = this->getPos().x - v->getPos().x;
-    double dy = this->getPos().y - v->getPos().y;
-    double alpha = atan2(dy, dx);
-
+void Ball::bounce(Entity* surface) {
+    double dx = this->getPos().x - surface->getPos().x;
+    double dy = this->getPos().y - surface->getPos().y;
+    double alpha = std::atan2(dy, dx);
     double speed = normal_speed + 0.01;
 
     double sx = speed * cos(alpha);
     double sy = speed * sin(alpha);
 
-    if (v == Paddle::mainPaddle) {
-        sy = fabs(sy);
+    if (surface == Paddle::mainPaddle) {
+        sy = std::max(fabs(sy), 0.1);
     }
 
     this->speed = { sx, sy };
 
-    while (GameRunner::touch(this, v) != badVector) {
+    while (this->touches(surface)) {
         this->move();
     }
 }

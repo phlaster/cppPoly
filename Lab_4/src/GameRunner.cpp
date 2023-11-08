@@ -1,46 +1,49 @@
 #include "headers/GameRunner.hpp"
 #include "headers/Brick.hpp"
+#include "headers/Ball.hpp"
+#include "headers/Bonus.hpp"
+#include "headers/Paddle.hpp"
+
 #include <GL/freeglut.h>
 #include <chrono>
 #include <thread>
-#include <vector>
 
-v2 empty = { -1, -1 };
+const Field FIELD = {
+    {0,  2,  4,  4,  4,  4,  4,  4,  2,  0},
+    {1,  3,  4,  4,  2,  2,  4,  4,  3,  1},
+    {1,  5,  3,  3,  3,  3,  3,  3,  5,  1},
+    {1,  5,  5,  5,  4,  4,  5,  5,  5,  1},
+    {0,  4,  1,  4,  5,  5,  4,  1,  4,  0},
+    {0,  4,  4,  4,  1,  1,  4,  4,  4,  0},
+    {0,  2,  3,  0,  1,  1,  0,  3,  2,  0},
+    {2,  0,  2,  2,  0,  0,  0,  2,  0,  2},
+    {1,  2,  0,  1,  0,  0,  1,  0,  2,  1},
+    {1,  0,  3,  0,  0,  0,  0,  3,  0,  1},
+    {0,  1,  0,  1,  0,  0,  1,  0,  1,  0},
+    {1,  0,  0,  0,  0,  0,  0,  0,  0,  1}
+};
+//     const Field FIELD = { // Break single block and game ends
+//         {},{},{},{},{},{},{},{},{},{},{},{},
+//     {1,  5,  0,  0,  0,  5,  0,  0,  0,  0}
+// };
+
+GameRunner* CurrentInstance;
 
 GameRunner::GameRunner() {
     block_size = { 50, 20 };
     Entity::setWindowSize(600, 600);
-    Entity::globalClockReset();
     Entity::setRadius(10);
     Brick::setSize(block_size);
     Ball::initBonuses();
-    Ball* p = new Ball({ 0, 0 });
-    Ball::balls.insert(p);
-    create_field();
+    new Ball({ 0, 0 });
+    create_field(FIELD);
 }
 
 GameRunner::~GameRunner(){
     exit(0);
 }
-void GameRunner::create_field() {
-    std::vector<std::vector<int>> field = {
-        {0,  2,  4,  4,  4,  4,  4,  4,  2,  0},
-        {5,  3,  4,  4,  2,  2,  4,  4,  3,  5},
-        {5,  4,  3,  3,  3,  3,  3,  3,  4,  5},
-        {5,  5,  5,  5,  5,  5,  5,  5,  5,  5},
-        {0,  4,  1,  4,  0,  0,  4,  1,  4,  0},
-        {0,  4,  4,  4,  1,  1,  4,  4,  4,  0},
-        {0,  2,  3,  1,  1,  1,  1,  3,  2,  0},
-        {2,  2,  2,  2,  0,  0,  2,  2,  2,  2},
-        {1,  0,  0,  1,  0,  0,  1,  0,  0,  1},
-        {1,  3,  3,  3,  0,  0,  3,  3,  3,  1},
-        {1,  1,  5,  5,  0,  0,  5,  5,  1,  1},
-        {1,  0,  0,  0,  0,  0,  0,  0,  0,  1}
-    };
-    //     std::vector<std::vector<int>> field = {
-    //         {},{},{},{},{},{},{},{},{},{},{},{},
-    //     {1,  5,  0,  0,  0,  5,  0,  0,  0,  0}
-    // };
+
+void GameRunner::create_field(const Field& field) {
     double x_0 = 1.5 * block_size.x;
     double dx =  block_size.x;
     double y_0 = Entity::windowSize.y - 2 * block_size.y;
@@ -51,35 +54,13 @@ void GameRunner::create_field() {
             if (field[i][j] == 0) {
                 continue;
             }
-
             double x = x_0 + j * dx;
             double y = y_0 - i * dy;
-
-            Brick* new_block = new Brick({x, y}, field[i][j]);
+            new Brick({x, y}, field[i][j]);
         }
     }
 }
 
-
-GameRunner* CurrentInstance;
-
-v2 GameRunner::touch(Entity* f, Entity* s) {
-    double xOverlap = std::max(
-        0.0,
-        std::min(f->getPos().x + f->getSize().x / 2, s->getPos().x + s->getSize().x / 2) -
-        std::max(f->getPos().x - f->getSize().x / 2, s->getPos().x - s->getSize().x / 2)
-    );
-    double yOverlap = std::max(
-        0.0,
-        std::min(f->getPos().y + f->getSize().y / 2, s->getPos().y + s->getSize().y / 2) -
-        std::max(f->getPos().y - f->getSize().y / 2, s->getPos().y - s->getSize().y / 2)
-    );
-
-    if (xOverlap > 0 && yOverlap > 0) {
-        return { xOverlap, yOverlap };
-    }
-    return { -1, -1 };
-}
 void GameRunner::initGame(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -89,7 +70,6 @@ void GameRunner::initGame(int argc, char** argv) {
 	initGlutFunctions();
 	glutMainLoop();
 }
-
 
 bool win() {
 	bool f = true;
@@ -111,12 +91,13 @@ void endgame_check(){
 
 void update_balls() {
     Ball* to_deleteBall = nullptr;
-    for (auto u : Ball::balls) {
-        u->move();
-        if (!u->inGame()) {
-            to_deleteBall = u;
+    for (auto ball_i : Ball::balls) {
+        ball_i->move();
+        if (!ball_i->inGame()) {
+            to_deleteBall = ball_i;
         }
     }
+
     if (to_deleteBall) {
         delete to_deleteBall;
         Ball::balls.erase(to_deleteBall);
@@ -125,10 +106,14 @@ void update_balls() {
 
 void update_bonuses() {
     Bonus* to_deleteBonus = nullptr;
-    for (auto u : Bonus::bonuses) {
-        u->move();
-        if (!u->inGame()) {
-            to_deleteBonus = u;
+    for (Bonus* bonus_i : Bonus::bonuses) {
+        bonus_i->move();
+        if (bonus_i->touches(Paddle::mainPaddle)) {
+            bonus_i->activate();
+            to_deleteBonus = bonus_i;
+        }
+        if (!bonus_i->inGame()) {
+            to_deleteBonus = bonus_i;
         }
     }
     if (to_deleteBonus) {
@@ -138,43 +123,29 @@ void update_bonuses() {
 }
 
 void handle_ball_paddle_collisions() {
-    for (auto u : Ball::balls) {
-        if (!u->isSticking() && GameRunner::touch(u, Paddle::mainPaddle) != empty) {
+    for (Ball* ball_i : Ball::balls) {
+        if (!ball_i->isSticking() && ball_i->touches(Paddle::mainPaddle)) {
             if (Paddle::mainPaddle->isReadyToStick()) {
                 Paddle::mainPaddle->unMagnit();
-                u->stick();
-                u->setSpeed({ 0, 0 });
+                ball_i->stick();
+                ball_i->setSpeed({ 0, 0 });
                 continue;
             }
-            u->bounce(Paddle::mainPaddle);
+            ball_i->bounce(Paddle::mainPaddle);
         }
-    }
-}
-
-void handle_bonus_paddle_collisions() {
-    Bonus* to_deleteBonus = nullptr;
-    for (auto u : Bonus::bonuses) {
-        if (GameRunner::touch(u, Paddle::mainPaddle) != empty) {
-            u->activate();
-            to_deleteBonus = u;
-        }
-    }
-    if (to_deleteBonus) {
-        delete to_deleteBonus;
-        Bonus::bonuses.erase(to_deleteBonus);
     }
 }
 
 void handle_ball_block_collisions() {
     Brick* to_deleteBlock = nullptr;
-    for (auto u : Ball::balls) {
-        for (auto v : Brick::blocks) {
-            if (GameRunner::touch(u, v) != empty) {
-                v->touch();
-                if (!v->inGame()) {
-                    to_deleteBlock = v;
+    for (Ball* ball_i : Ball::balls) {
+        for (Brick* brick_j : Brick::blocks) {
+            if (ball_i->touches(brick_j)) {
+                brick_j->loose_hp();
+                if (!brick_j->inGame()) {
+                    to_deleteBlock = brick_j;
                 }
-                u->bounce(v);
+                ball_i->bounce(brick_j);
             }
         }
     }
@@ -186,11 +157,9 @@ void handle_ball_block_collisions() {
 
 void GameRunner::theLogic() {
     endgame_check();
-    Entity::globalClockTick();
     update_balls();
     update_bonuses();
     handle_ball_paddle_collisions();
-    handle_bonus_paddle_collisions();
     handle_ball_block_collisions();
 }
 
@@ -219,10 +188,10 @@ void keypress(unsigned char key, int x, int y) {
 		exit(0);
 	}
 	if (key == ' ') {
-		for (auto u : Ball::balls) {
-			if (u->isSticking()) {
-				u->notstick();
-				u->setSpeed({ 0, Ball::normal_speed });
+		for (auto ball_i : Ball::balls) {
+			if (ball_i->isSticking()) {
+				ball_i->notstick();
+				ball_i->setSpeed({ 0, Ball::normal_speed });
 			}
 		}
 	}
@@ -230,7 +199,7 @@ void keypress(unsigned char key, int x, int y) {
 		Paddle::mainPaddle->moveLeft();
 	} else if (key == 'd') {
 		Paddle::mainPaddle->moveRight();
-	}
+    }
 }
 
 void resize(int w, int h) {

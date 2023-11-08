@@ -11,23 +11,21 @@ void Bonus::drawAllBonuses() {
 	}
 }
 
-bool Bonus::inGame() {
-	if (pos.y > windowSize.y || pos.y < 0) return false;
-	return true;
+bool Bonus::inGame() const {
+	return (pos.y < windowSize.y && pos.y > 0);
 }
 
 void add_ball::drawBonus() {
 	drawPoly(20);
 }
 void add_ball::activate() {
-	Ball* p = new Ball(pos);
+	new Ball(pos);
 }
 
 
 void make_shield::activate() {
 	Ball::makeShield();
 }
-
 void make_shield::drawBonus() {
 	drawPoly(4);
 }

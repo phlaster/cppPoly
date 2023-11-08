@@ -34,4 +34,4 @@ clean:
 
 
 purge:
-	rm -rf $(OBJECT_DIR)/;
+	rm -rf $(OBJECT_DIR)/; rm *.out
